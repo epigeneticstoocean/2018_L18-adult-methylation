@@ -1,0 +1,42 @@
+
+
+
+
+
+Getting sorted bams from bismark..
+
+
+```{bash}
+/opt/homebrew/bin/wget -r \
+--no-check-certificate \
+--quiet \
+--no-directories --no-parent \
+-P ../bg_data/ \
+-A *sorted.bam \
+https://gannet.fish.washington.edu/seashell/bu-mox/scrubbed/071521-cvBS/
+```
+
+```{r include=FALSE}
+file.list_21=list('../data_21/1_ATCACG_L001_R1_001_trimmed_bismark_bt2.deduplicated.sorted.bam',
+                 '../data_21/2_CGATGT_L001_R1_001_trimmed_bismark_bt2.deduplicated.sorted.bam',
+                 '../data_21/3_TTAGGC_L001_R1_001_trimmed_bismark_bt2.deduplicated.sorted.bam',
+                 '../data_21/4_TGACCA_L001_R1_001_trimmed_bismark_bt2.deduplicated.sorted.bam',
+                 '../data_21/5_ACAGTG_L001_R1_001_trimmed_bismark_bt2.deduplicated.sorted.bam',
+                 '../data_21/6_GCCAAT_L001_R1_001_trimmed_bismark_bt2.deduplicated.sorted.bam',
+                 '../data_21/7_CAGATC_L001_R1_001_trimmed_bismark_bt2.deduplicated.sorted.bam',
+                 '../data_21/8_ACTTGA_L001_R1_001_trimmed_bismark_bt2.deduplicated.sorted.bam'
+)
+```
+
+```{r eval=FALSE, include=FALSE}
+myobj_21 = processBismarkAln(location = file.list_21, sample.id = list("1","2","3","4","5","6","7","8"), assembly = "v081", read.context="CpG", mincov=2, treatment = c(0,0,0,0,1,1,1,1))
+```
+
+```{r include=FALSE}
+#save(myobj_21, file = "../analyses/myobj_21")
+
+```
+
+```{r include=FALSE}
+load("../analyses/myobj_21")
+```

@@ -27,29 +27,29 @@ genome_folder="/gscratch/srlab/sr320/data/Cvirg-genome/"
 
 source /gscratch/srlab/programs/scripts/paths.sh
 
-# 
-# 
-# ${bismark_dir}/bismark_genome_preparation \
-# --verbose \
-# --parallel 28 \
-# --path_to_aligner ${bowtie2_dir} \
-# ${genome_folder}
+#
+#
+${bismark_dir}/bismark_genome_preparation \
+--verbose \
+--parallel 28 \
+--path_to_aligner ${bowtie2_dir} \
+${genome_folder}
 
 
-# 
-# FastQC 
-# 
+#
+# FastQC
+#
 # Populate array with FastQ files
-#fastq_array=(/gscratch/srlab/sr320/data/cvirg/*.fq.gz)
-# 
+fastq_array=(/gscratch/srlab/sr320/data/cvirg/*.fq.gz)
+#
 # Pass array contents to new variable
-#fastqc_list=$(echo "${fastq_array[*]}")
-# 
+fastqc_list=$(echo "${fastq_array[*]}")
+#
 # Run FastQC
 ${fastqc} \
-#--threads 28 \
-#${fastqc_list} \
-#-o /gscratch/scrubbed/sr320/071521-cvBS/
+--threads 28 \
+${fastqc_list} \
+-o /gscratch/scrubbed/sr320/071521-cvBS/
 
 
 
@@ -57,22 +57,22 @@ ${fastqc} \
 # zr3534_10_R1.fq.gz  zr3644_11_R2.fq.gz  zr3644_22_R1.fq.gz
 # 0502_R1.fq.gz  zr3534_10_R2.fq.gz  zr3644_12_R1.fq.gz  zr3644_22_R2.fq.gz
 
-# find ${reads_dir}*_1.fq.gz \
-# | xargs basename -s _R1_val_1.fq.gz | xargs -I{} ${bismark_dir}/bismark \
-# --path_to_bowtie ${bowtie2_dir} \
-# -genome ${genome_folder} \
-# -p 4 \
-# -score_min L,0,-0.6 \
-# --non_directional \
-# -1 ${reads_dir}{}_R1_val_1.fq.gz \
-# -2 ${reads_dir}{}_R2_val_2.fq.gz
+find ${reads_dir}*_1.fq.gz \
+| xargs basename -s _R1_val_1.fq.gz | xargs -I{} ${bismark_dir}/bismark \
+--path_to_bowtie ${bowtie2_dir} \
+-genome ${genome_folder} \
+-p 4 \
+-score_min L,0,-0.6 \
+--non_directional \
+-1 ${reads_dir}{}_R1_val_1.fq.gz \
+-2 ${reads_dir}{}_R2_val_2.fq.gz
 
-# find *.bam | \
-# xargs basename -s .bam | \
-# xargs -I{} ${bismark_dir}/deduplicate_bismark \
-# --bam \
-# --paired \
-# {}.bam
+find *.bam | \
+xargs basename -s .bam | \
+xargs -I{} ${bismark_dir}/deduplicate_bismark \
+--bam \
+--paired \
+{}.bam
 
 
 

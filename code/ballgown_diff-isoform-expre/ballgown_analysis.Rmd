@@ -1,0 +1,169 @@
+---
+title: "Identification of differentially expressed transcripts in C.virginica gonad exposed to elevated pCO2using Ballgown"
+author: "Sam White"
+date: "10/21/2021"
+output: md_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Use [Ballgown](https://github.com/alyssafrazee/ballgown) for identification of differentially expressed isoforms in _C.virginica_ gonad tissue exposed to elevated pCO<sub>2</sub>.
+
+REQUIRES Linux-based system to run all cells properly; some cells will not work on Mac OS!
+
+REQUIRES the following R libraries:
+
+- `[Ballgown](https://github.com/alyssafrazee/ballgown)` (Bioconductor)
+
+- `tidyverse`
+
+## Load `R` libraries
+
+```{r}
+library("ballgown")
+library("tidyverse")
+```
+
+## Download Ballgown input files.
+
+Notebooks detailing their creation:
+
+- [FastQ trimming](https://robertslab.github.io/sams-notebook/2021/07/14/Trimming-C.virginica-Gonad-RNAseq-with-FastP-on-Mox.html)
+
+- [Genome indexing, and exon/splice sites with HISAT2](https://robertslab.github.io/sams-notebook/2021/07/20/Genome-Annotations-Splice-Site-and-Exon-Extractions-for-C.virginica-GCF_002022765.2-Genome-Using-Hisat2-on-Mox.html)
+
+- [Mapping and identificaion of isoforms with StingTie](https://robertslab.github.io/sams-notebook/2021/07/20/RNAseq-Alignments-C.virginica-Gonad-Data-to-GCF_002022765.2-Genome-Using-StringTie-on-Mox.html)
+
+```{bash}
+# Download Ballgown input files and directory structure
+wget \
+--directory-prefix ./data \
+--recursive \
+--no-check-certificate \
+--continue \
+--cut-dirs 2 \
+--no-host-directories \
+--no-parent \
+--quiet \
+--reject "input_fastqs_checksums.md5" \
+--accept "*.ctab,*checksums.md5" https://gannet.fish.washington.edu/Atumefaciens/20210726_cvir_stringtie_GCF_002022765.2_isoforms/
+```
+
+## Verify checksums
+
+NOTE: Warnings are expected, as the checksums files have checksums for files that are note downloaded for this project.
+```{bash}
+cd data
+
+# Make a line
+line="-----------------------------------------------------------------------------------------------"
+
+# Set working directory
+wd=$(pwd)
+
+# Loop through directories and verify checksums
+for directory in */
+do
+  cd "${directory}"
+  # Get sample name; strips trailing slash from directory name
+  sample="${directory%/}"
+  
+  echo ${line}
+  echo "${sample}"
+  echo ""
+  
+  # Confirm checksums; sorts for easier reading
+  md5sum --check "${sample}"_checksums.md5 | sort
+  echo ""
+  echo "${line}"
+  echo ""
+  cd ${wd}
+done
+
+# Show downloaded directories/files
+tree
+```
+
+## Download and filter metadata file to 
+```{r}
+# Read in metadata file from URL
+sample_metadata_full <- read.csv("https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/data/adult-meta.csv")
+
+# View full metadata
+sample_metadata_full
+
+# Subset metadata in preparation of creating pData data frame far Ballgown
+# Sort by OldSample.ID to ensure matches directory structure (required for Ballgown)
+sample_metadata_subset <- sample_metadata_full %>% select(OldSample.ID, Treatment, Sex) %>% arrange(OldSample.ID)
+
+# View subsetted metadata
+sample_metadata_subset
+```
+
+## Find Ballgown installation location
+```{r}
+data_directory <-  system.file('extdata', package='ballgown') # automatically finds ballgown's installation directory
+# examine data_directory:
+data_directory
+```
+
+## Create Ballgown object
+```{r}
+# Uses regular expression in samplePattern to find all pertinent folders
+# Load all measurement data
+bg <-  ballgown(dataDir="./data", samplePattern='S.*[FM]', meas='all')
+bg
+```
+
+## Look at exon info
+```{r}
+# Exon info
+structure(bg)$exon
+```
+
+## Look at intron info
+```{r}
+# Intron info
+structure(bg)$intron
+```
+
+## Look at transcript (isoform) info
+```{r}
+# Transcript info
+structure(bg)$trans
+```
+
+## Load all transcript expression data
+```{r}
+# Expression data
+whole_tx_table <-  texpr(bg, 'all')
+whole_tx_table
+```
+
+## Load phenotype dataframe into Ballgown object
+```{r}
+# Load phenotype info into Ballgown
+pData(bg) <- sample_metadata_subset
+
+phenotype_table <-  pData(bg)
+phenotype_table
+```
+
+## Identify differentially expressed isofroms between Sex, applying the confounder "Treatment".
+## Returns FoldChange, too (getFC = TRUE)
+```{r}
+stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="Sex", adjustvars = 'Treatment', getFC = TRUE)
+stat_results
+filtered_stat_results <- filter(stat_results, pval <= 0.05 & qval <= 0.05)
+nrow(filtered_stat_results)
+```
+
+```{r}
+mod = model.matrix(~ pData(bg)$Treatment + pData(bg)$Sex)
+mod0 = model.matrix(~ pData(bg)$Treatmen)
+adjusted_results = stattest(bg, feature='transcript', meas='FPKM', mod0=mod0, mod=mod)
+head(adjusted_results)
+```

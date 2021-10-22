@@ -35,6 +35,15 @@ library("ballgown")
 library("tidyverse")
 ```
 
+
+## Set user variables!
+```{r}
+# Set maximum pvalue for isoform expression cutoff
+pvalue <- 0.05
+
+# Set maximum qvalue (false discovery rate) for isoform expression cutoff
+qvalue <- 0.05
+```
 ## Download Ballgown input files.
 
 Notebooks detailing their creation:
@@ -165,7 +174,7 @@ phenotype_table
 ```{r}
 stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="Sex", adjustvars = 'Treatment', getFC = TRUE)
 stat_results
-filtered_stat_results <- filter(stat_results, pval <= 0.05 & qval <= 0.05)
+filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
 nrow(filtered_stat_results)
 ```
 

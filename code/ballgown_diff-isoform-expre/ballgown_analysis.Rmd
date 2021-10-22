@@ -14,6 +14,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 REQUIRES Linux-based system to run all cells properly; some cells will not work on Mac OS!
 
+REQUIRES the following Bash programs:
+
+- `wget`
+
+- `tree`
+
+- `md5sum`
+
 REQUIRES the following R libraries:
 
 - `[Ballgown](https://github.com/alyssafrazee/ballgown)` (Bioconductor)
@@ -54,7 +62,7 @@ wget \
 
 ## Verify checksums
 
-NOTE: Warnings are expected, as the checksums files have checksums for files that are note downloaded for this project.
+NOTE: Warnings are expected, as the checksums files have checksums for files that are not downloaded for this project.
 ```{bash}
 cd data
 

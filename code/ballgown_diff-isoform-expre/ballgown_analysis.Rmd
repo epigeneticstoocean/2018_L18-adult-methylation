@@ -93,7 +93,7 @@ do
   echo ""
   
   # Confirm checksums; sorts for easier reading
-  md5sum --check "${sample}"_checksums.md5 | sort
+  md5sum --check "${sample}"_checksums.md5 | sort -V
   echo ""
   echo "${line}"
   echo ""

@@ -165,6 +165,7 @@ whole_tx_table
 # Load phenotype info into Ballgown
 pData(bg) <- sample_metadata_subset
 
+# Examine phenotype data as it exists in Ballgown
 phenotype_table <-  pData(bg)
 phenotype_table
 ```
@@ -175,6 +176,37 @@ phenotype_table
 stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="Sex", adjustvars = 'Treatment', getFC = TRUE)
 stat_results
 filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
+filtered_stat_results
+nrow(filtered_stat_results)
+```
+
+## Identify differentially expressed isofroms between Treatment, applying the confounder "Sex".
+## Returns FoldChange, too (getFC = TRUE)
+```{r}
+stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="Treatment", adjustvars = 'Sex', getFC = TRUE)
+stat_results
+filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
+filtered_stat_results
+nrow(filtered_stat_results)
+```
+
+## Identify differentially expressed isofroms between Treatments, without confounder.
+## Returns FoldChange, too (getFC = TRUE)
+```{r}
+stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="Treatment", getFC = TRUE)
+stat_results
+filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
+filtered_stat_results
+nrow(filtered_stat_results)
+```
+
+## Identify differentially expressed isofroms between Sex, without confounder.
+## Returns FoldChange, too (getFC = TRUE)
+```{r}
+stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="Sex", getFC = TRUE)
+stat_results
+filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
+filtered_stat_results
 nrow(filtered_stat_results)
 ```
 

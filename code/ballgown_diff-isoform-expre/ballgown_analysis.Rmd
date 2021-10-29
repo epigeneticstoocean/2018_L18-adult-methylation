@@ -1,5 +1,5 @@
 ---
-title: "Identification of differentially expressed transcripts in C.virginica gonad exposed to elevated pCO2using Ballgown"
+title: "Identification of differentially expressed transcripts in C.virginica gonad exposed to elevated pCO2 using Ballgown"
 author: "Sam White"
 date: "10/21/2021"
 output: md_document
@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Use [Ballgown](https://github.com/alyssafrazee/ballgown) for identification of differentially expressed isoforms in _C.virginica_ gonad tissue exposed to elevated pCO<sub>2</sub>.
 
-REQUIRES Linux-based system to run all cells properly; some cells will not work on Mac OS!
+REQUIRES Linux-based system to run all chunks properly; some chunks will not work on Mac OS!
 
 REQUIRES the following Bash programs:
 
@@ -44,6 +44,9 @@ pvalue <- 0.05
 # Set maximum qvalue (false discovery rate) for isoform expression cutoff
 qvalue <- 0.05
 ```
+
+
+
 ## Download Ballgown input files.
 
 Notebooks detailing their creation:
@@ -104,22 +107,6 @@ done
 tree
 ```
 
-## Download and filter metadata file to 
-```{r}
-# Read in metadata file from URL
-sample_metadata_full <- read.csv("https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/data/adult-meta.csv")
-
-# View full metadata
-sample_metadata_full
-
-# Subset metadata in preparation of creating pData data frame far Ballgown
-# Sort by OldSample.ID to ensure matches directory structure (required for Ballgown)
-sample_metadata_subset <- sample_metadata_full %>% select(OldSample.ID, Treatment, Sex) %>% arrange(OldSample.ID)
-
-# View subsetted metadata
-sample_metadata_subset
-```
-
 ## Find Ballgown installation location
 ```{r}
 data_directory <-  system.file('extdata', package='ballgown') # automatically finds ballgown's installation directory
@@ -134,6 +121,44 @@ data_directory
 bg <-  ballgown(dataDir="./data", samplePattern='S.*[FM]', meas='all')
 bg
 ```
+
+
+## Download and filter metadata file
+
+Filtered metadata will be used to create a phenotype dataframe needed for Ballgown differential expression analysis.
+
+`TreatmentN` column explanation:
+
+control males = 1
+control females = 2
+exposed males = 3
+exposed females = 4
+
+
+```{r}
+# Read in metadata file from URL
+sample_metadata_full <- read.csv("https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/data/adult-meta.csv")
+
+# View full metadata
+sample_metadata_full
+
+# Subset metadata in preparation of creating pData data frame far Ballgown
+# Sort by OldSample.ID to ensure matches directory structure (required for Ballgown)
+sample_metadata_subset <- sample_metadata_full %>% select(OldSample.ID, TreatmentN, Sex) %>% arrange(OldSample.ID)
+
+# View subsetted metadata
+sample_metadata_subset
+```
+## Load phenotype dataframe into Ballgown object
+```{r}
+# Load phenotype info into Ballgown
+pData(bg) <- sample_metadata_subset
+
+# Examine phenotype data as it exists in Ballgown
+phenotype_table <-  pData(bg)
+phenotype_table
+```
+
 
 ## Look at exon info
 ```{r}
@@ -170,49 +195,26 @@ phenotype_table <-  pData(bg)
 phenotype_table
 ```
 
-## Identify differentially expressed isofroms between Sex, applying the confounder "Treatment".
-## Returns FoldChange, too (getFC = TRUE)
-```{r}
-stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="Sex", adjustvars = 'Treatment', getFC = TRUE)
-stat_results
-filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
-filtered_stat_results
-nrow(filtered_stat_results)
-```
-
-## Identify differentially expressed isofroms between Treatment, applying the confounder "Sex".
-## Returns FoldChange, too (getFC = TRUE)
-```{r}
-stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="Treatment", adjustvars = 'Sex', getFC = TRUE)
-stat_results
-filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
-filtered_stat_results
-nrow(filtered_stat_results)
-```
-
-## Identify differentially expressed isofroms between Treatments, without confounder.
-## Returns FoldChange, too (getFC = TRUE)
-```{r}
-stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="Treatment", getFC = TRUE)
-stat_results
-filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
-filtered_stat_results
-nrow(filtered_stat_results)
-```
-
-## Identify differentially expressed isofroms between Sex, without confounder.
+## Identify differentially expressed isofroms between Sex.
 ## Returns FoldChange, too (getFC = TRUE)
 ```{r}
 stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="Sex", getFC = TRUE)
 stat_results
+
+# Filter based on p-value and q-value
 filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
 filtered_stat_results
+
+# Print number of rows
 nrow(filtered_stat_results)
 ```
 
+## Identify differentially expressed isofroms between Treatment.
+## NOTE: Will not return fold change; not possible in multi-group comparisons
 ```{r}
-mod = model.matrix(~ pData(bg)$Treatment + pData(bg)$Sex)
-mod0 = model.matrix(~ pData(bg)$Treatmen)
-adjusted_results = stattest(bg, feature='transcript', meas='FPKM', mod0=mod0, mod=mod)
-head(adjusted_results)
+stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="TreatmentN")
+stat_results
+filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
+filtered_stat_results
+nrow(filtered_stat_results)
 ```

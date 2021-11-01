@@ -173,3 +173,32 @@ save(myobj_c, file = "../analyses/myobj_c")
 ```{r include=FALSE}
 load("../analyses/myobj_21")
 ```
+
+
+```{r message=FALSE, warning=FALSE}
+filtered.myobj=filterByCoverage(myobj_c,lo.count=10,lo.perc=NULL,
+                                      hi.count=NULL,hi.perc=98)
+
+meth_filter=unite(filtered.myobj, min.per.group=NULL, destrand=TRUE)
+
+clusterSamples(meth_filter, dist="correlation", method="ward", plot=TRUE)
+
+
+PCASamples(meth_filter)
+
+```
+
+```{r include=FALSE}
+myDiff=calculateDiffMeth(meth_filter,mc.cores=8)
+
+```
+
+
+
+
+
+
+
+
+
+

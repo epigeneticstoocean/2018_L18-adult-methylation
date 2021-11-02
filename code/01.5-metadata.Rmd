@@ -2,6 +2,13 @@
 title: "01.5-metatdata"
 output: github_md
 ---
+```{r}
+install.packages("Matrix")
+```
+
+
+
+
 
 ```{r}
 meta <- read.csv("data/adult-meta.csv")

@@ -1,26 +1,11 @@
 
 # Running through BS with data from Mox pipeline
 
-```{r}
-install.packages("Matrix")
-```
-
-
-
-```{r}
-Sys.getenv()[ grep("LIB|PATH", names(Sys.getenv())) ]if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-BiocManager::install(version = "3.14")
-BiocManager::install("methylKit")
-```
 
 ```{r}
 library(methylKit)
 ```
-```{r}
-library()
 
-```
 
 
 
@@ -172,12 +157,18 @@ myobj_c = processBismarkAln(location = file.list_c,
 
 ```{r eval=FALSE, include=FALSE}
 myobj_all = processBismarkAln(location = file.list_all,
-  sample.id = list("12M","13M","16F","19F","22F","23M","29F","31M", "35F","36F","39F","3F","41F","44F","48F","50F","52F","53F","54F","59M","64M","6M","76F", "77F","7M","9M"),
+  sample.id = list("12M","13M","16F","19F","22F","23M","29F","31M", "35F","36F","39F","3F","41F","44F","48M","50F","52F","53F","54F","59M","64M","6M","76F", "77F","7M","9M"),
   assembly = "cv",
   read.context="CpG",
   mincov=2,
   treatment = c(3,1,2,2,4,3,4,3,4,4,2,4,4,2,3,4,2,2,2,3,1,1,2,4,1,3))
 ```
+
+```{r include=FALSE}
+save(myobj_all, file = "../analyses/myobj_all")
+
+```
+
 
 ```{r include=FALSE}
 save(myobj_c, file = "../analyses/myobj_c")
@@ -187,6 +178,21 @@ save(myobj_c, file = "../analyses/myobj_c")
 ```{r include=FALSE}
 load("../analyses/myobj_c")
 ```
+
+
+```{r message=FALSE, warning=FALSE}
+filtered.myobj=filterByCoverage(myobj_all,lo.count=10,lo.perc=NULL,
+                                      hi.count=NULL,hi.perc=98)
+
+meth_filter=unite(filtered.myobj, min.per.group=NULL, destrand=TRUE)
+
+clusterSamples(meth_filter, dist="correlation", method="ward", plot=TRUE)
+
+
+PCASamples(meth_filter)
+
+```
+
 
 
 ```{r message=FALSE, warning=FALSE}
@@ -201,6 +207,7 @@ clusterSamples(meth_filter, dist="correlation", method="ward", plot=TRUE)
 PCASamples(meth_filter)
 
 ```
+
 
 ```{r include=FALSE}
 myDiff=calculateDiffMeth(meth_filter,mc.cores=8)

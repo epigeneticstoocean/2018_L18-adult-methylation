@@ -176,7 +176,7 @@ save(myobj_c, file = "../analyses/myobj_c")
 ```
 
 ```{r include=FALSE}
-load("../analyses/myobj_c")
+load("../analyses/myobj_all")
 ```
 
 
@@ -192,7 +192,18 @@ clusterSamples(meth_filter, dist="correlation", method="ward", plot=TRUE)
 PCASamples(meth_filter)
 
 ```
+```{r message=FALSE, warning=FALSE}
+filtered.myobj=filterByCoverage(myobj_all,lo.count=5,lo.perc=NULL,
+                                      hi.count=NULL,hi.perc=98)
 
+meth_filter=unite(filtered.myobj, min.per.group=NULL, destrand=TRUE)
+
+clusterSamples(meth_filter, dist="correlation", method="ward", plot=TRUE)
+
+
+PCASamples(meth_filter)
+
+```
 
 
 ```{r message=FALSE, warning=FALSE}
@@ -210,10 +221,43 @@ PCASamples(meth_filter)
 
 
 ```{r include=FALSE}
-myDiff=calculateDiffMeth(meth_filter,mc.cores=8)
+myDiff=calculateDiffMeth(meth_filter,mc.cores=48)
 
 ```
 
+
+```{r include=FALSE}
+save(myDiff, file = "../analyses/myDiff_all")
+
+```
+
+
+
+```{r}
+write.table(myDiff, file = "../analyses/myDiff_all.tab", sep = "\t")
+```
+
+
+
+
+```{r}
+# get hyper methylated bases
+myDiff_a50p.hyper=getMethylDiff(myDiff,difference=50,qvalue=0.01,type="hyper")
+#
+# get hypo methylated bases
+myDiff_a50p.hypo=getMethylDiff(myDiff,difference=50,qvalue=0.01,type="hypo")
+#
+#
+# get all differentially methylated bases
+myDiff_a50p=getMethylDiff(myDiff,difference=50,qvalue=0.01)
+```
+
+
+
+
+```{r}
+write.table(myDiff50p, file = "../analyses/myDiff50p.tab", sep = "\t")
+```
 
 
 

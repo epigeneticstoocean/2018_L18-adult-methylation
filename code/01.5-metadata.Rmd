@@ -1,0 +1,39 @@
+---
+title: "01.5-metatdata"
+output: github_md
+---
+```{r}
+install.packages("Matrix")
+```
+
+
+
+
+
+```{r}
+meta <- read.csv("data/adult-meta.csv")
+```
+
+
+
+```{r}
+library(dplyr)
+library(tibble)
+```
+
+
+
+```{r}
+meta
+```
+
+26 samples 
+
+```{r}
+filter(meta, Sex == "M") 
+```
+
+```{r}
+filter(meta, Sex == "M") 
+```
+

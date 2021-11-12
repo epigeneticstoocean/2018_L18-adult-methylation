@@ -2,8 +2,6 @@
 # Running through BS with data from Mox pipeline
 
 
-
-
 ```{r}
 library(methylKit)
 ```
@@ -106,6 +104,7 @@ file.list_all=list('../bg_data/12M_R1_val_1_bismark_bt2_pe.deduplicated.sorted.b
                 '../bg_data/23M_R1_val_1_bismark_bt2_pe.deduplicated.sorted.bam',
                 '../bg_data/29F_R1_val_1_bismark_bt2_pe.deduplicated.sorted.bam',
                 '../bg_data/31M_R1_val_1_bismark_bt2_pe.deduplicated.sorted.bam',
+                '../bg_data/35F_R1_val_1_bismark_bt2_pe.deduplicated.sorted.bam',
                 '../bg_data/36F_R1_val_1_bismark_bt2_pe.deduplicated.sorted.bam',
                 '../bg_data/39F_R1_val_1_bismark_bt2_pe.deduplicated.sorted.bam',
                 '../bg_data/3F_R1_val_1_bismark_bt2_pe.deduplicated.sorted.bam',
@@ -157,13 +156,19 @@ myobj_c = processBismarkAln(location = file.list_c,
 
 
 ```{r eval=FALSE, include=FALSE}
-myobj_all = processBismarkAln(location = file.list_c,
-  sample.id = list("12M","13M","16F","19F","22F","23M","29F","31M","36F","3F","41F","44F","23M","29F","31M"),
+myobj_all = processBismarkAln(location = file.list_all,
+  sample.id = list("12M","13M","16F","19F","22F","23M","29F","31M", "35F","36F","39F","3F","41F","44F","48M","50F","52F","53F","54F","59M","64M","6M","76F", "77F","7M","9M"),
   assembly = "cv",
   read.context="CpG",
   mincov=2,
-  treatment = c(0,0,0,0,1,1,1,1))
+  treatment = c(3,1,2,2,4,3,4,3,4,4,2,4,4,2,3,4,2,2,2,3,1,1,2,4,1,3))
 ```
+
+```{r include=FALSE}
+save(myobj_all, file = "../analyses/myobj_all")
+
+```
+
 
 ```{r include=FALSE}
 save(myobj_c, file = "../analyses/myobj_c")
@@ -171,5 +176,94 @@ save(myobj_c, file = "../analyses/myobj_c")
 ```
 
 ```{r include=FALSE}
-load("../analyses/myobj_21")
+load("../analyses/myobj_all")
 ```
+
+
+```{r message=FALSE, warning=FALSE}
+filtered.myobj=filterByCoverage(myobj_all,lo.count=10,lo.perc=NULL,
+                                      hi.count=NULL,hi.perc=98)
+
+meth_filter=unite(filtered.myobj, min.per.group=NULL, destrand=TRUE)
+
+clusterSamples(meth_filter, dist="correlation", method="ward", plot=TRUE)
+
+
+PCASamples(meth_filter)
+
+```
+```{r message=FALSE, warning=FALSE}
+filtered.myobj=filterByCoverage(myobj_all,lo.count=5,lo.perc=NULL,
+                                      hi.count=NULL,hi.perc=98)
+
+meth_filter=unite(filtered.myobj, min.per.group=NULL, destrand=TRUE)
+
+clusterSamples(meth_filter, dist="correlation", method="ward", plot=TRUE)
+
+
+PCASamples(meth_filter)
+
+```
+
+
+```{r message=FALSE, warning=FALSE}
+filtered.myobj=filterByCoverage(myobj_c,lo.count=10,lo.perc=NULL,
+                                      hi.count=NULL,hi.perc=98)
+
+meth_filter=unite(filtered.myobj, min.per.group=NULL, destrand=TRUE)
+
+clusterSamples(meth_filter, dist="correlation", method="ward", plot=TRUE)
+
+
+PCASamples(meth_filter)
+
+```
+
+
+```{r include=FALSE}
+myDiff=calculateDiffMeth(meth_filter,mc.cores=48)
+
+```
+
+
+```{r include=FALSE}
+save(myDiff, file = "../analyses/myDiff_all")
+
+```
+
+
+
+```{r}
+write.table(myDiff, file = "../analyses/myDiff_all.tab", sep = "\t")
+```
+
+
+
+
+```{r}
+# get hyper methylated bases
+myDiff_a50p.hyper=getMethylDiff(myDiff,difference=50,qvalue=0.01,type="hyper")
+#
+# get hypo methylated bases
+myDiff_a50p.hypo=getMethylDiff(myDiff,difference=50,qvalue=0.01,type="hypo")
+#
+#
+# get all differentially methylated bases
+myDiff_a50p=getMethylDiff(myDiff,difference=50,qvalue=0.01)
+```
+
+
+
+
+```{r}
+write.table(myDiff50p, file = "../analyses/myDiff50p.tab", sep = "\t")
+```
+
+
+
+
+
+
+
+
+

@@ -232,6 +232,13 @@ save(myDiff, file = "../analyses/myDiff_all")
 ```
 
 
+```{r include=FALSE}
+load("../analyses/myDiff_all")
+```
+
+
+
+
 
 ```{r}
 write.table(myDiff, file = "../analyses/myDiff_all.tab", sep = "\t")

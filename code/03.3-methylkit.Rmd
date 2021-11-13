@@ -123,13 +123,13 @@ myDiff=calculateDiffMeth(meth_filter,mc.cores=48)
 
 
 ```{r include=FALSE}
-save(myDiff, file = "../analyses/myDiff_all")
+save(myDiff, file = "../analyses/myDiff_oa")
 
 ```
 
 
 ```{r include=FALSE}
-load("../analyses/myDiff_all")
+load("../analyses/myDiff_oa")
 ```
 
 
@@ -137,7 +137,7 @@ load("../analyses/myDiff_all")
 
 
 ```{r}
-write.table(myDiff, file = "../analyses/myDiff_all.tab", sep = "\t")
+write.table(myDiff, file = "../analyses/myDiff_oa.tab", sep = "\t")
 ```
 
 
@@ -145,21 +145,21 @@ write.table(myDiff, file = "../analyses/myDiff_all.tab", sep = "\t")
 
 ```{r}
 # get hyper methylated bases
-myDiff_a50p.hyper=getMethylDiff(myDiff,difference=50,qvalue=0.01,type="hyper")
+myDiff_oa50p.hyper=getMethylDiff(myDiff,difference=50,qvalue=0.01,type="hyper")
 #
 # get hypo methylated bases
-myDiff_a50p.hypo=getMethylDiff(myDiff,difference=50,qvalue=0.01,type="hypo")
+myDiff_oa50p.hypo=getMethylDiff(myDiff,difference=50,qvalue=0.01,type="hypo")
 #
 #
 # get all differentially methylated bases
-myDiff_a50p=getMethylDiff(myDiff,difference=50,qvalue=0.01)
+myDiff_oa50p=getMethylDiff(myDiff,difference=50,qvalue=0.01)
 ```
 
 
 
 
 ```{r}
-write.table(myDiff50p, file = "../analyses/myDiff50p.tab", sep = "\t")
+write.table(myDiff_oa50p, file = "../analyses/myDiff_oa50p.tab", sep = "\t")
 ```
 
 

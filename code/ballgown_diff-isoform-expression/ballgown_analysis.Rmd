@@ -198,20 +198,51 @@ phenotype_table
 ## Identify differentially expressed isofroms between Sex.
 ## Returns FoldChange, too (getFC = TRUE)
 ```{r}
-stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="Sex", getFC = TRUE)
-stat_results
+DET_sex_stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="Sex", getFC = TRUE)
+DET_sex_stat_results
 
 # Filter based on p-value and q-value
-filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
-filtered_stat_results
+DET_sex_filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
+DET_sex_filtered_stat_results
 
 # Print number of rows
 nrow(filtered_stat_results)
+
+# Merge with full table to get subset of just differentially expressed isoforms
+merged_DET_sex_filtered <- merge(x = DET_sex_filtered_stat_results, y = full_table, by.x = "id", by.y = "t_id")
+merged_DET_sex_filtered
+
+
+
+# Write merged dataframe to CSV
+write.csv(
+  merged_DET_sex_filtered, 
+  file = "./analyses/merged_DET_sex_filtered_p-0.05_q-0.05.csv", 
+  quote = FALSE, 
+  row.names = FALSE)
+
+# Creates a BED file and inserts necessary rows to create properly formatted BED file. 
+write.table(
+  (
+    merged_DET_sex_filtered %>% 
+    select(id, start, end, strand) %>% 
+      add_column(
+        name = ".", # Inserts a "name" column and assigns value of "." to all rows
+        score = "0", # Inserts a "score" columns and assigns a value of "0" to all rows.
+        .before = "strand"
+        )
+    ), 
+  file = "./analyses/DET_sex_filtered_p-0.05_q-0.05.bed",
+  sep = "\t",
+  col.names = FALSE,
+  row.names = FALSE,
+  quote = FALSE
+)
 ```
 
 ## Identify differentially expressed isofroms between Treatment.
 ## NOTE: Will not return fold change; not possible in multi-group comparisons
-```{r}
+# ```{r}
 stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="TreatmentN")
 stat_results
 filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)

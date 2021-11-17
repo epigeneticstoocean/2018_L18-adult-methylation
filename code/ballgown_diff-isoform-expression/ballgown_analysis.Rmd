@@ -225,9 +225,8 @@ write.csv(
 write.table(
   (
     merged_DET_sex_filtered %>% 
-    select(id, start, end, strand) %>% 
+    select(chr, start, end, t_name, strand) %>% 
       add_column(
-        name = ".", # Inserts a "name" column and assigns value of "." to all rows
         score = "0", # Inserts a "score" columns and assigns a value of "0" to all rows.
         .before = "strand"
         )

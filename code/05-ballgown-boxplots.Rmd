@@ -1,0 +1,48 @@
+---
+title: "05-ballgown-boxplots"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+bgown <- read.table(file = "ballgown_diff-isoform-expression/analyses/fpkm_all_samples.tab", sep = "\t")
+```
+
+```{r}
+bgown2 <- read.csv("ballgown_diff-isoform-expression/analyses/fpkm_all_samples.tab", sep="\t")
+
+```
+
+
+```{r}
+
+bbgown <- pivot_longer(bgown, cols = starts_with("FPK"),
+                       names_to = "library") %>%
+                       mutate(sex = (str_sub(library, -1)))
+```
+
+
+
+
+```{r}
+ggplot(data = bbgown, mapping = aes(x = value)) +
+  geom_boxplot() +
+  facet_wrap(~library)
+```
+
+
+```{r}
+ggplot(bbgown, aes(library, value)) +
+  geom_boxplot(color = "blue") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+
+```{r}
+ggplot(bbgown, aes(library, value, color = sex)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```

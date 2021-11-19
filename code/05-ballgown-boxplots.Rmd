@@ -1,6 +1,7 @@
 ---
 title: "05-ballgown-boxplots"
-output: html_document
+output:
+  github_document
 ---
 
 ```{r}

@@ -2,7 +2,7 @@
 title: "Identification of differentially expressed transcripts in C.virginica gonad exposed to elevated pCO2 using Ballgown"
 author: "Sam White"
 date: "10/21/2021"
-output: md_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -244,10 +244,57 @@ write.table(
 
 ## Identify differentially expressed isofroms between Treatment.
 ## NOTE: Will not return fold change; not possible in multi-group comparisons
-# ```{r}
+```{r}
 stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="TreatmentN")
 stat_results
+
+# Filter DET based on set p-avlues and q-values
 filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
 filtered_stat_results
-nrow(filtered_stat_results)
+
+# Count number of DET.
+# Subtract "1" to account for header row.
+count_filtered_stat_results <-  nrow(filtered_stat_results) - 1
+
+# Print number of DET
+cat("Number of DET with p-values and q-values <= ", pvalue, ":", count_filtered_stat_results)
 ```
+
+
+```{r}
+# Pull all transcript expression values stored in FPKM measurement from ballgown object
+fpkm <- texpr(bg, meas = "FPKM")
+
+write.table(fpkm, file = "./analyses/fpkm_all_samples.tab", sep = "\t")
+
+# Log transform data and add 1 to all values to artificially prevent log2(0).
+fpkm_df <- as.data.frame(log2(fpkm+1))
+fpkm_df
+
+# Rotate data frame
+# Creates a "Sex" column by pulling last character from each library name (M/F)
+fpkm_df_pivot <- pivot_longer(
+  fpkm_df, cols = starts_with("FPKM"), 
+  names_to = "library") %>% 
+  mutate(sex = (str_sub(library, -1)
+                )
+         )
+
+
+fpkm_libraries_sorted <- fpkm_df_pivot[with(fpkm_df_pivot, order("sex", "library"))]
+fpkm_libraries_sorted_unique <- (unique(fpkm_df_pivot_sorted$library))
+fpkm_libraries_sorted_unique
+
+fpkm_df_pivot_sorted <- fpkm_df_pivot %>% arrange(sex)
+fpkm_df_pivot_sorted
+
+fpkm_df_pivot$library <- factor(fpkm_df_pivot$library, levels = fpkm_libraries_sorted_unique)
+
+
+library(ggplot2)
+ggplot(fpkm_df_pivot, aes(library, value, color = sex)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+```
+
+

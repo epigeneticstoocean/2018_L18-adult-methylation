@@ -1,8 +1,8 @@
-`2018_L18-adult-methylation/code/ballgown_diff-isoform-expression/data`
+`2018_L18-adult-methylation/data/ballgown`
 
 # Data directory for `ballgown` differential isoform expression analysis.
 
-After running the `2018_L18-adult-methylation/code/ballgown_diff-isoform-expression/ballgown_analysis.Rmd` file,
+After running the `2018_L18-adult-methylation/code/ballgown_analysis.Rmd` file,
 this directory will be populated with the following structure and files generated from our `StringTie` analysis,
 specifically organized and formatted for use in `ballgown`.
 

@@ -282,20 +282,31 @@ fpkm_df_pivot <- pivot_longer(
 head(fpkm_df_pivot)
 
 
-
+# Sort data frame by sex
 fpkm_df_pivot_sorted <- fpkm_df_pivot %>% arrange(sex)
 head(fpkm_df_pivot_sorted)
 
+# Set unique library names as vector
+# Will be used to group boxplot by sex
 fpkm_libraries_sorted_unique <- (unique(fpkm_df_pivot_sorted$library))
 head(fpkm_libraries_sorted_unique)
 
+# Re-rder data frame by sex-sorted data
 fpkm_df_pivot$library <- factor(fpkm_df_pivot$library, levels = fpkm_libraries_sorted_unique)
 
 
-
+# Produce boxplots of FPKM for each library
+# Grouped by sex
 ggplot(fpkm_df_pivot, aes(library, value, color = sex)) +
   geom_boxplot() +
+  ggtitle("Comparisons of transcript FPKM values across all libraries") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ylab("FPKM") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+
+# Save boxplot
+ggsave(filename = "../figures/fpkm_f-vs-m_boxplot.pdf")
+
 ```
 
 

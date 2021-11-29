@@ -192,6 +192,8 @@ clusterSamples(meth_filter, dist="correlation", method="ward", plot=TRUE)
 PCASamples(meth_filter)
 
 ```
+
+
 ```{r message=FALSE, warning=FALSE}
 filtered.myobj=filterByCoverage(myobj_all,lo.count=5,lo.perc=NULL,
                                       hi.count=NULL,hi.perc=98)

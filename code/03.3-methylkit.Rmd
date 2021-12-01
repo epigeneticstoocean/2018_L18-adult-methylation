@@ -164,6 +164,23 @@ write.table(myDiff_oa50p, file = "../analyses/myDiff_oa50p.tab", sep = "\t")
 
 
 
+```{r}
+myDiff_oa50p.tab <- read.csv(file = "../analyses/myDiff_oa50p.tab", sep = "\t")
+```
+
+
+
+
+```{r}
+oao_dml <- dplyr::select(myDiff_oa50p.tab, chr, start, end, meth.diff) %>% 
+  mutate(start = start -1) %>% 
+  mutate_if(is.numeric, as.integer) %>% 
+  mutate(TYPE ="oao_DML") %>% 
+  select(chr, start, end, TYPE, meth.diff) 
+
+write.table(oao_dml, file = "../analyses/oao_dml.bed", sep = "\t", row.names = FALSE, quote = FALSE)
+```
+
 
 
 

@@ -161,5 +161,5 @@ sex_dml <- dplyr::select(myDiff_c75p.tab, chr, start, end, meth.diff) %>%
 
 
 ```{r}
-write.table(sex_dml, file = "../analyses/sex_dml.bed", sep = "\t", row.names = FALSE, quote = FALSE)
+write.table(sex_dml, file = "../analyses/sex_dml.bed", sep = "\t", row.names = FALSE,col.names = FALSE, quote = FALSE)
 ```

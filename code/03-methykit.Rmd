@@ -265,9 +265,26 @@ myDiff_a50p=getMethylDiff(myDiff,difference=50,qvalue=0.01)
 
 
 ```{r}
-write.table(myDiff50p, file = "../analyses/myDiff50p.tab", sep = "\t")
+write.table(myDiff_a50p, file = "../analyses/myDiff_a50p.tab", sep = "\t")
 ```
 
+
+```{r}
+myDiff_a50p.tab <- read.csv(file = "../analyses/myDiff_a50p.tab", sep = "\t")
+```
+
+
+
+
+```{r}
+all_dml <- dplyr::select(myDiff_a50p.tab, chr, start, end, meth.diff) %>% 
+  mutate(start = start -1) %>% 
+  mutate_if(is.numeric, as.integer) %>% 
+  mutate(TYPE ="comb_DML") %>% 
+  select(chr, start, end, TYPE, meth.diff) 
+
+write.table(all_dml, file = "../analyses/4cond_dml.bed", sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)
+```
 
 
 

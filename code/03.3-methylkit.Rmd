@@ -178,7 +178,7 @@ oao_dml <- dplyr::select(myDiff_oa50p.tab, chr, start, end, meth.diff) %>%
   mutate(TYPE ="oao_DML") %>% 
   select(chr, start, end, TYPE, meth.diff) 
 
-write.table(oao_dml, file = "../analyses/oao_dml.bed", sep = "\t", row.names = FALSE, quote = FALSE)
+write.table(oao_dml, file = "../analyses/oao_dml.bed", sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)
 ```
 
 

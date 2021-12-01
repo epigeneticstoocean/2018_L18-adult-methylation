@@ -106,17 +106,20 @@ save(myDiff_c, file = "../analyses/myDiff_c")
 
 ```
 
+```{r include=FALSE}
+load("../analyses/myDiff_c")
+```
 
 ```{r}
 # get hyper methylated bases
-myDiff_c50p.hyper=getMethylDiff(myDiff_c,difference=50,qvalue=0.01,type="hyper")
+myDiff_c75p.hyper=getMethylDiff(myDiff_c,difference=75,qvalue=0.01,type="hyper")
 #
 # get hypo methylated bases
-myDiff_c50p.hypo=getMethylDiff(myDiff_c,difference=50,qvalue=0.01,type="hypo")
+myDiff_c75p.hypo=getMethylDiff(myDiff_c,difference=75,qvalue=0.01,type="hypo")
 #
 #
 # get all differentially methylated bases
-myDiff_c50p=getMethylDiff(myDiff_c,difference=50,qvalue=0.01)
+myDiff_c75p=getMethylDiff(myDiff_c,difference=75,qvalue=0.01)
 ```
 
 ```{r}
@@ -126,4 +129,37 @@ myDiff_c75p=getMethylDiff(myDiff_c,difference=75,qvalue=0.01)
 
 
 
+```{r}
+write.table(myDiff_c75p, file = "../analyses/myDiff_c75p.tab", sep = "\t")
+```
 
+
+```{r}
+myDiff_c75p.tab <- read.csv(file = "../analyses/myDiff_c75p.tab", sep = "\t")
+```
+
+
+
+
+```{r}
+head(myDiff_c75p)
+```
+
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+sex_dml <- dplyr::select(myDiff_c75p.tab, chr, start, end, meth.diff) %>% 
+  mutate(start = start -1) %>% 
+  mutate_if(is.numeric, as.integer) %>% 
+  mutate(TYPE ="sex_DML") %>% 
+  select(chr, start, end, TYPE, meth.diff) 
+
+```
+
+
+```{r}
+write.table(sex_dml, file = "../analyses/sex_dml.bed", sep = "\t", row.names = FALSE, quote = FALSE)
+```

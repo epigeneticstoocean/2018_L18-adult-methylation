@@ -33,6 +33,7 @@ REQUIRES the following R libraries:
 ```{r}
 library("ballgown")
 library("tidyverse")
+library("ggplot2")
 ```
 
 
@@ -140,14 +141,14 @@ exposed females = 4
 sample_metadata_full <- read.csv("https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/data/adult-meta.csv")
 
 # View full metadata
-sample_metadata_full
+head(sample_metadata_full)
 
 # Subset metadata in preparation of creating pData data frame far Ballgown
 # Sort by OldSample.ID to ensure matches directory structure (required for Ballgown)
 sample_metadata_subset <- sample_metadata_full %>% select(OldSample.ID, TreatmentN, Sex) %>% arrange(OldSample.ID)
 
 # View subsetted metadata
-sample_metadata_subset
+head(sample_metadata_subset)
 ```
 ## Load phenotype dataframe into Ballgown object
 ```{r}
@@ -156,7 +157,7 @@ pData(bg) <- sample_metadata_subset
 
 # Examine phenotype data as it exists in Ballgown
 phenotype_table <-  pData(bg)
-phenotype_table
+head(phenotype_table)
 ```
 
 
@@ -192,25 +193,25 @@ pData(bg) <- sample_metadata_subset
 
 # Examine phenotype data as it exists in Ballgown
 phenotype_table <-  pData(bg)
-phenotype_table
+head(phenotype_table)
 ```
 
 ## Identify differentially expressed isofroms between Sex.
 ## Returns FoldChange, too (getFC = TRUE)
 ```{r}
 DET_sex_stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="Sex", getFC = TRUE)
-DET_sex_stat_results
+head(DET_sex_stat_results)
 
 # Filter based on p-value and q-value
 DET_sex_filtered_stat_results <- filter(DET_sex_stat_results, pval <= pvalue & qval <= qvalue)
-DET_sex_filtered_stat_results
+head(DET_sex_filtered_stat_results)
 
 # Print number of rows
 nrow(DET_sex_filtered_stat_results)
 
 # Merge with full table to get subset of just differentially expressed isoforms
 merged_DET_sex_filtered <- merge(x = DET_sex_filtered_stat_results, y = whole_tx_table, by.x = "id", by.y = "t_id")
-merged_DET_sex_filtered
+head(merged_DET_sex_filtered)
 
 
 
@@ -246,11 +247,11 @@ write.table(
 ## NOTE: Will not return fold change; not possible in multi-group comparisons
 ```{r}
 stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="TreatmentN")
-stat_results
+head(stat_results)
 
 # Filter DET based on set p-avlues and q-values
 filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
-filtered_stat_results
+head(filtered_stat_results)
 
 # Count number of DET.
 # Subtract "1" to account for header row.
@@ -268,7 +269,7 @@ fpkm <- texpr(bg, meas = "FPKM")
 
 # Log transform data and add 1 to all values to artificially prevent log2(0).
 fpkm_df <- as.data.frame(log2(fpkm+1))
-fpkm_df
+head(fpkm_df)
 
 # Rotate data frame
 # Creates a "Sex" column by pulling last character from each library name (M/F)
@@ -278,22 +279,34 @@ fpkm_df_pivot <- pivot_longer(
   mutate(sex = (str_sub(library, -1)
                 )
          )
+head(fpkm_df_pivot)
 
 
-fpkm_libraries_sorted <- fpkm_df_pivot[with(fpkm_df_pivot, order("sex", "library"))]
-fpkm_libraries_sorted_unique <- (unique(fpkm_df_pivot_sorted$library))
-fpkm_libraries_sorted_unique
-
+# Sort data frame by sex
 fpkm_df_pivot_sorted <- fpkm_df_pivot %>% arrange(sex)
-fpkm_df_pivot_sorted
+head(fpkm_df_pivot_sorted)
 
+# Set unique library names as vector
+# Will be used to group boxplot by sex
+fpkm_libraries_sorted_unique <- (unique(fpkm_df_pivot_sorted$library))
+head(fpkm_libraries_sorted_unique)
+
+# Re-rder data frame by sex-sorted data
 fpkm_df_pivot$library <- factor(fpkm_df_pivot$library, levels = fpkm_libraries_sorted_unique)
 
 
-library(ggplot2)
+# Produce boxplots of FPKM for each library
+# Grouped by sex
 ggplot(fpkm_df_pivot, aes(library, value, color = sex)) +
   geom_boxplot() +
+  ggtitle("Comparisons of transcript FPKM values across all libraries") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ylab("FPKM") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+
+# Save boxplot
+ggsave(filename = "../figures/fpkm_f-vs-m_boxplot.pdf")
+
 ```
 
 

@@ -288,6 +288,64 @@ write.table(
 )
 ```
 
+## Identify differentially expressed genes (DEG) between Sex.
+## Returns FoldChange, too (getFC = TRUE)
+```{r female-male-DEG}
+
+# Set string describing comparison
+# Used for final printout in chunk
+comparison <- "female vs. male"
+
+# Determine differentially expressed genes with ballgown
+DEG_sex_stat_results = stattest(bg, feature='gene', meas='FPKM', covariate="Sex", getFC = TRUE)
+head(DEG_sex_stat_results)
+
+# Filter based on p-value and q-value
+DEG_sex_filtered_stat_results <- filter(DEG_sex_stat_results, pval <= pvalue & qval <= qvalue)
+head(DEG_sex_filtered_stat_results)
+
+
+# Merge with full table to get subset of just differentially expressed isoforms
+merged_DEG_sex_filtered <- merge(x = DEG_sex_filtered_stat_results, y = whole_tx_table, by.x = "id", by.y = "t_id")
+head(merged_DEG_sex_filtered)
+
+
+# Write merged dataframe to CSV
+write.csv(
+  merged_DEG_sex_filtered, 
+  file = "../analyses/merged_DEG_sex_filtered_p-0.05_q-0.05.csv", 
+  quote = FALSE, 
+  row.names = FALSE)
+
+# Inspect full merged file
+head(merged_DEG_sex_filtered)
+
+# Creates a BED file and inserts necessary columns to create properly formatted BED file. 
+write.table(
+  (
+    merged_DEG_sex_filtered %>% 
+    select(chr, start, end, t_name, strand) %>% 
+      add_column(
+        score = "0", # Inserts a "score" columns and assigns a value of "0" to all rows.
+        .before = "strand"
+        )
+    ), 
+  file = "../analyses/DEG_sex_filtered_p-0.05_q-0.05.bed",
+  sep = "\t",
+  col.names = FALSE,
+  row.names = FALSE,
+  quote = FALSE
+)
+
+# Count number of DET.
+# Subtract "1" to account for header row.
+count_DEG_sex_filtered_stat_results <-  nrow(DEG_sex_filtered_stat_results) - 1
+
+# Print number of DEG
+cat("Number of ", comparison, " DEG with p-values and q-values <= ", pvalue, ":", count_DEG_sex_filtered_stat_results)
+```
+
+
 ## Identify differentially expressed isofroms between Treatment.
 ## NOTE: Will not return fold change; not possible in multi-group comparisons
 ```{r}

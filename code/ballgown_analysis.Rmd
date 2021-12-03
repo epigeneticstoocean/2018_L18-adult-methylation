@@ -136,7 +136,7 @@ exposed males = 3
 exposed females = 4
 
 
-```{r}
+```{r create-dataframes-for-ballgwon-pData}
 # Read in metadata file from URL
 sample_metadata_full <- read.csv("https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/data/adult-meta.csv")
 
@@ -145,10 +145,17 @@ head(sample_metadata_full)
 
 # Subset metadata in preparation of creating pData data frame far Ballgown
 # Sort by OldSample.ID to ensure matches directory structure (required for Ballgown)
-sample_metadata_subset <- sample_metadata_full %>% select(OldSample.ID, TreatmentN, Sex) %>% arrange(OldSample.ID)
+sample_metadata_subset <- sample_metadata_full %>% select(OldSample.ID, Treatment, TreatmentN, Sex) %>% arrange(OldSample.ID)
 
 # View subsetted metadata
 head(sample_metadata_subset)
+
+# Create modified metadata for testing differential expression processing
+mutated_sample_metadata_subset <- sample_metadata_subset
+mutated_sample_metadata_subset$TreatmentN[mutated_sample_metadata_subset$TreatmentN == 4] <- 0
+
+head(mutated_sample_metadata_subset)
+
 ```
 ## Load phenotype dataframe into Ballgown object
 ```{r}
@@ -186,14 +193,58 @@ whole_tx_table <-  texpr(bg, 'all')
 whole_tx_table
 ```
 
-## Load phenotype dataframe into Ballgown object
-```{r}
-# Load phenotype info into Ballgown
-pData(bg) <- sample_metadata_subset
+## Load all gene expression data
+```{r load-gene-expression-data}
+whole_gx_table <-  gexpr(bg)
+head(whole_gx_table)
+```
 
-# Examine phenotype data as it exists in Ballgown
-phenotype_table <-  pData(bg)
-head(phenotype_table)
+## Generate boxplots to compare FPKM across all samples
+```{r boxplots-to-compare-FPKM-across-all-samples} 
+# Pull all transcript expression values stored in FPKM measurement from ballgown object
+fpkm <- texpr(bg, meas = "FPKM")
+
+
+# Log transform data and add 1 to all values to artificially prevent log2(0).
+fpkm_df <- as.data.frame(log2(fpkm+1))
+head(fpkm_df)
+
+# Rotate data frame
+# Creates a "Sex" column by pulling last character from each library name (M/F)
+fpkm_df_pivot <- pivot_longer(
+  fpkm_df, cols = starts_with("FPKM"), 
+  names_to = "library") %>% 
+  mutate(sex = (str_sub(library, -1)
+                )
+         )
+head(fpkm_df_pivot)
+
+
+# Sort data frame by sex
+fpkm_df_pivot_sorted <- fpkm_df_pivot %>% arrange(sex)
+head(fpkm_df_pivot_sorted)
+
+# Set unique library names as vector
+# Will be used to group boxplot by sex
+fpkm_libraries_sorted_unique <- (unique(fpkm_df_pivot_sorted$library))
+head(fpkm_libraries_sorted_unique)
+
+# Re-rder data frame by sex-sorted data
+fpkm_df_pivot$library <- factor(fpkm_df_pivot$library, levels = fpkm_libraries_sorted_unique)
+
+
+# Produce boxplots of FPKM for each library
+# Grouped by sex
+ggplot(fpkm_df_pivot, aes(library, value, color = sex)) +
+  geom_boxplot() +
+  ggtitle("Comparisons of transcript FPKM values across all libraries") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ylab("FPKM") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+
+# Save boxplot
+ggsave(filename = "../figures/fpkm_f-vs-m_boxplot.pdf")
+
 ```
 
 ## Identify differentially expressed isofroms between Sex.
@@ -243,6 +294,64 @@ write.table(
 )
 ```
 
+## Identify differentially expressed genes (DEG) between Sex.
+## Returns FoldChange, too (getFC = TRUE)
+```{r female-male-DEG}
+
+# Set string describing comparison
+# Used for final printout in chunk
+comparison <- "female vs. male"
+
+# Determine differentially expressed genes with ballgown
+DEG_sex_stat_results = stattest(bg, feature='gene', meas='FPKM', covariate="Sex", getFC = TRUE)
+head(DEG_sex_stat_results)
+
+# Filter based on p-value and q-value
+DEG_sex_filtered_stat_results <- filter(DEG_sex_stat_results, pval <= pvalue & qval <= qvalue)
+head(DEG_sex_filtered_stat_results)
+
+
+# Merge with full table to get subset of just differentially expressed isoforms
+merged_DEG_sex_filtered <- merge(x = DEG_sex_filtered_stat_results, y = whole_tx_table, by.x = "id", by.y = "gene_id")
+head(merged_DEG_sex_filtered)
+
+
+# Write merged dataframe to CSV
+write.csv(
+  merged_DEG_sex_filtered, 
+  file = "../analyses/merged_DEG_sex_filtered_p-0.05_q-0.05.csv", 
+  quote = FALSE, 
+  row.names = FALSE)
+
+# Inspect full merged file
+head(merged_DEG_sex_filtered)
+
+# Creates a BED file and inserts necessary columns to create properly formatted BED file. 
+write.table(
+  (
+    merged_DEG_sex_filtered %>% 
+    select(chr, start, end, t_name, strand) %>% 
+      add_column(
+        score = "0", # Inserts a "score" columns and assigns a value of "0" to all rows.
+        .before = "strand"
+        )
+    ), 
+  file = "../analyses/DEG_sex_filtered_p-0.05_q-0.05.bed",
+  sep = "\t",
+  col.names = FALSE,
+  row.names = FALSE,
+  quote = FALSE
+)
+
+# Count number of DET.
+# Subtract "1" to account for header row.
+count_DEG_sex_filtered_stat_results <-  nrow(DEG_sex_filtered_stat_results) - 1
+
+# Print number of DEG
+cat("Number of ", comparison, " DEG with p-values and q-values <= ", pvalue, ":", count_DEG_sex_filtered_stat_results)
+```
+
+
 ## Identify differentially expressed isofroms between Treatment.
 ## NOTE: Will not return fold change; not possible in multi-group comparisons
 ```{r}
@@ -262,51 +371,50 @@ cat("Number of DET with p-values and q-values <= ", pvalue, ":", count_filtered_
 ```
 
 
+## Examine if differential expression results are affected by TreatmentN numbering
+## I.e. are DET based off of alphanumeric comparisons?
+## Change one of the `TreatmentN` numbers to `0` and compare to results from analysis in chunk above.
 ```{r}
-# Pull all transcript expression values stored in FPKM measurement from ballgown object
-fpkm <- texpr(bg, meas = "FPKM")
+# Load phenotype info into Ballgown
+pData(bg) <- mutated_sample_metadata_subset
+# Examine phenotype data as it exists in Ballgown
+phenotype_table <-  pData(bg)
 
+stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="TreatmentN")
+head(stat_results)
 
-# Log transform data and add 1 to all values to artificially prevent log2(0).
-fpkm_df <- as.data.frame(log2(fpkm+1))
-head(fpkm_df)
+# Filter DET based on set p-avlues and q-values
+filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
+head(filtered_stat_results)
 
-# Rotate data frame
-# Creates a "Sex" column by pulling last character from each library name (M/F)
-fpkm_df_pivot <- pivot_longer(
-  fpkm_df, cols = starts_with("FPKM"), 
-  names_to = "library") %>% 
-  mutate(sex = (str_sub(library, -1)
-                )
-         )
-head(fpkm_df_pivot)
+# Count number of DET.
+# Subtract "1" to account for header row.
+count_filtered_stat_results <-  nrow(filtered_stat_results) - 1
 
-
-# Sort data frame by sex
-fpkm_df_pivot_sorted <- fpkm_df_pivot %>% arrange(sex)
-head(fpkm_df_pivot_sorted)
-
-# Set unique library names as vector
-# Will be used to group boxplot by sex
-fpkm_libraries_sorted_unique <- (unique(fpkm_df_pivot_sorted$library))
-head(fpkm_libraries_sorted_unique)
-
-# Re-rder data frame by sex-sorted data
-fpkm_df_pivot$library <- factor(fpkm_df_pivot$library, levels = fpkm_libraries_sorted_unique)
-
-
-# Produce boxplots of FPKM for each library
-# Grouped by sex
-ggplot(fpkm_df_pivot, aes(library, value, color = sex)) +
-  geom_boxplot() +
-  ggtitle("Comparisons of transcript FPKM values across all libraries") +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  ylab("FPKM") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
-
-# Save boxplot
-ggsave(filename = "../figures/fpkm_f-vs-m_boxplot.pdf")
-
+# Print number of DET
+cat("Number of DET with p-values and q-values <= ", pvalue, ":", count_filtered_stat_results)
 ```
 
 
+## Identify differentially expressed transcripts between Treatment (control/exposed).
+## Returns FoldChange, too (getFC = TRUE)
+```{r control-exposed-DET}
+# Load phenotype info into Ballgown
+pData(bg) <- sample_metadata_subset
+# Examine phenotype data as it exists in Ballgown
+phenotype_table <-  pData(bg)
+
+stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="Treatment", getFC = TRUE)
+head(stat_results)
+
+# Filter DET based on set p-avlues and q-values
+filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
+head(filtered_stat_results)
+
+# Count number of DET.
+# Subtract "1" to account for header row.
+count_filtered_stat_results <-  nrow(filtered_stat_results) - 1
+
+# Print number of DET
+cat("Number of DET with p-values and q-values <= ", pvalue, ":", count_filtered_stat_results)
+```

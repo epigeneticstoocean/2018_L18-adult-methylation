@@ -149,6 +149,13 @@ sample_metadata_subset <- sample_metadata_full %>% select(OldSample.ID, Treatmen
 
 # View subsetted metadata
 head(sample_metadata_subset)
+
+# Create modified metadata for testing differential expression processing
+mutated_sample_metadata_subset <- sample_metadata_subset
+mutated_sample_metadata_subset$TreatmentN[mutated_sample_metadata_subset$TreatmentN == 4] <- 0
+
+head(mutated_sample_metadata_subset)
+
 ```
 ## Load phenotype dataframe into Ballgown object
 ```{r}
@@ -186,15 +193,6 @@ whole_tx_table <-  texpr(bg, 'all')
 whole_tx_table
 ```
 
-## Load phenotype dataframe into Ballgown object
-```{r}
-# Load phenotype info into Ballgown
-pData(bg) <- sample_metadata_subset
-
-# Examine phenotype data as it exists in Ballgown
-phenotype_table <-  pData(bg)
-head(phenotype_table)
-```
 
 ## Identify differentially expressed isofroms between Sex.
 ## Returns FoldChange, too (getFC = TRUE)
@@ -246,6 +244,31 @@ write.table(
 ## Identify differentially expressed isofroms between Treatment.
 ## NOTE: Will not return fold change; not possible in multi-group comparisons
 ```{r}
+stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="TreatmentN")
+head(stat_results)
+
+# Filter DET based on set p-avlues and q-values
+filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
+head(filtered_stat_results)
+
+# Count number of DET.
+# Subtract "1" to account for header row.
+count_filtered_stat_results <-  nrow(filtered_stat_results) - 1
+
+# Print number of DET
+cat("Number of DET with p-values and q-values <= ", pvalue, ":", count_filtered_stat_results)
+```
+
+
+## Examine if differential expression results are affected by TreatmentN numbering
+## I.e. are DET based off of alphanumeric comparisons?
+## Change one of the `TreatmentN` numbers to `0` and compare to results from analysis in chunk above.
+```{r}
+# Load phenotype info into Ballgown
+pData(bg) <- mutated_sample_metadata_subset
+# Examine phenotype data as it exists in Ballgown
+phenotype_table <-  pData(bg)
+
 stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="TreatmentN")
 head(stat_results)
 

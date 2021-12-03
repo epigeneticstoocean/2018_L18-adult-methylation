@@ -152,7 +152,8 @@ library(tidyverse)
 
 ```{r}
 sex_dml <- dplyr::select(myDiff_c75p.tab, chr, start, end, meth.diff) %>% 
-  mutate(start = start -1) %>% 
+  mutate(start = start -1) %>%
+  mutate(start = end +1) %>%
   mutate_if(is.numeric, as.integer) %>% 
   mutate(TYPE ="sex_DML") %>% 
   select(chr, start, end, TYPE, meth.diff) 

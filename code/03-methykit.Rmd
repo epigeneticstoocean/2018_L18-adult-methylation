@@ -279,6 +279,7 @@ myDiff_a50p.tab <- read.csv(file = "../analyses/myDiff_a50p.tab", sep = "\t")
 ```{r}
 all_dml <- dplyr::select(myDiff_a50p.tab, chr, start, end, meth.diff) %>% 
   mutate(start = start -1) %>% 
+  mutate(end = end +1) %>%
   mutate_if(is.numeric, as.integer) %>% 
   mutate(TYPE ="comb_DML") %>% 
   select(chr, start, end, TYPE, meth.diff) 
@@ -287,8 +288,14 @@ write.table(all_dml, file = "../analyses/4cond_dml.bed", sep = "\t", row.names =
 ```
 
 
+```{bash}
+head ../analyses/4cond_dml.bed
+```
 
 
+```{bash}
+head ../igv/4cond_dml.bed
+```
 
 
 

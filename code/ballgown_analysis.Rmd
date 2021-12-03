@@ -136,7 +136,7 @@ exposed males = 3
 exposed females = 4
 
 
-```{r}
+```{r create-dataframes-for-ballgwon-pData}
 # Read in metadata file from URL
 sample_metadata_full <- read.csv("https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/data/adult-meta.csv")
 
@@ -145,7 +145,7 @@ head(sample_metadata_full)
 
 # Subset metadata in preparation of creating pData data frame far Ballgown
 # Sort by OldSample.ID to ensure matches directory structure (required for Ballgown)
-sample_metadata_subset <- sample_metadata_full %>% select(OldSample.ID, TreatmentN, Sex) %>% arrange(OldSample.ID)
+sample_metadata_subset <- sample_metadata_full %>% select(OldSample.ID, Treatment, TreatmentN, Sex) %>% arrange(OldSample.ID)
 
 # View subsetted metadata
 head(sample_metadata_subset)
@@ -193,6 +193,53 @@ whole_tx_table <-  texpr(bg, 'all')
 whole_tx_table
 ```
 
+## Generate boxplots to compare FPKM across all samples
+```{r boxplots-to-compare-FPKM-across-all-samples} 
+# Pull all transcript expression values stored in FPKM measurement from ballgown object
+fpkm <- texpr(bg, meas = "FPKM")
+
+
+# Log transform data and add 1 to all values to artificially prevent log2(0).
+fpkm_df <- as.data.frame(log2(fpkm+1))
+head(fpkm_df)
+
+# Rotate data frame
+# Creates a "Sex" column by pulling last character from each library name (M/F)
+fpkm_df_pivot <- pivot_longer(
+  fpkm_df, cols = starts_with("FPKM"), 
+  names_to = "library") %>% 
+  mutate(sex = (str_sub(library, -1)
+                )
+         )
+head(fpkm_df_pivot)
+
+
+# Sort data frame by sex
+fpkm_df_pivot_sorted <- fpkm_df_pivot %>% arrange(sex)
+head(fpkm_df_pivot_sorted)
+
+# Set unique library names as vector
+# Will be used to group boxplot by sex
+fpkm_libraries_sorted_unique <- (unique(fpkm_df_pivot_sorted$library))
+head(fpkm_libraries_sorted_unique)
+
+# Re-rder data frame by sex-sorted data
+fpkm_df_pivot$library <- factor(fpkm_df_pivot$library, levels = fpkm_libraries_sorted_unique)
+
+
+# Produce boxplots of FPKM for each library
+# Grouped by sex
+ggplot(fpkm_df_pivot, aes(library, value, color = sex)) +
+  geom_boxplot() +
+  ggtitle("Comparisons of transcript FPKM values across all libraries") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ylab("FPKM") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+
+# Save boxplot
+ggsave(filename = "../figures/fpkm_f-vs-m_boxplot.pdf")
+
+```
 
 ## Identify differentially expressed isofroms between Sex.
 ## Returns FoldChange, too (getFC = TRUE)
@@ -285,51 +332,25 @@ cat("Number of DET with p-values and q-values <= ", pvalue, ":", count_filtered_
 ```
 
 
-```{r}
-# Pull all transcript expression values stored in FPKM measurement from ballgown object
-fpkm <- texpr(bg, meas = "FPKM")
+## Identify differentially expressed transcripts between Treatment (control/exposed).
+## Returns FoldChange, too (getFC = TRUE)
+```{r control-exposed-DET}
+# Load phenotype info into Ballgown
+pData(bg) <- sample_metadata_subset
+# Examine phenotype data as it exists in Ballgown
+phenotype_table <-  pData(bg)
 
+stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="Treatment", getFC = TRUE)
+head(stat_results)
 
-# Log transform data and add 1 to all values to artificially prevent log2(0).
-fpkm_df <- as.data.frame(log2(fpkm+1))
-head(fpkm_df)
+# Filter DET based on set p-avlues and q-values
+filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
+head(filtered_stat_results)
 
-# Rotate data frame
-# Creates a "Sex" column by pulling last character from each library name (M/F)
-fpkm_df_pivot <- pivot_longer(
-  fpkm_df, cols = starts_with("FPKM"), 
-  names_to = "library") %>% 
-  mutate(sex = (str_sub(library, -1)
-                )
-         )
-head(fpkm_df_pivot)
+# Count number of DET.
+# Subtract "1" to account for header row.
+count_filtered_stat_results <-  nrow(filtered_stat_results) - 1
 
-
-# Sort data frame by sex
-fpkm_df_pivot_sorted <- fpkm_df_pivot %>% arrange(sex)
-head(fpkm_df_pivot_sorted)
-
-# Set unique library names as vector
-# Will be used to group boxplot by sex
-fpkm_libraries_sorted_unique <- (unique(fpkm_df_pivot_sorted$library))
-head(fpkm_libraries_sorted_unique)
-
-# Re-rder data frame by sex-sorted data
-fpkm_df_pivot$library <- factor(fpkm_df_pivot$library, levels = fpkm_libraries_sorted_unique)
-
-
-# Produce boxplots of FPKM for each library
-# Grouped by sex
-ggplot(fpkm_df_pivot, aes(library, value, color = sex)) +
-  geom_boxplot() +
-  ggtitle("Comparisons of transcript FPKM values across all libraries") +
-  theme(plot.title = element_text(hjust = 0.5)) +
-  ylab("FPKM") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
-
-# Save boxplot
-ggsave(filename = "../figures/fpkm_f-vs-m_boxplot.pdf")
-
+# Print number of DET
+cat("Number of DET with p-values and q-values <= ", pvalue, ":", count_filtered_stat_results)
 ```
-
-

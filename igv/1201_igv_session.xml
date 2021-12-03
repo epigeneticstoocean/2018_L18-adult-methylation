@@ -6,6 +6,7 @@
         <Resource name="oao_dml.bed" path="https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/igv/oao_dml.bed"/>
         <Resource name="C_virginica-3.0_CG-motif.bed" path="http://eagle.fish.washington.edu/Cvirg_tracks/C_virginica-3.0_CG-motif.bed"/>
         <Resource name="C_virginica-3.0_Gnomon_mRNA.gff3" path="http://eagle.fish.washington.edu/Cvirg_tracks/C_virginica-3.0_Gnomon_mRNA.gff3"/>
+        <Resource name="DEG_sex_filtered_p-0.05_q-0.05.bed" path="https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/igv/DEG_sex_filtered_p-0.05_q-0.05.bed"/>
         <Resource name="DET_sex_filtered_p-0.05_q-0.05.bed" path="https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/igv/DET_sex_filtered_p-0.05_q-0.05.bed"/>
     </Resources>
     <Panel height="658" name="FeaturePanel" width="1849">

@@ -193,6 +193,12 @@ whole_tx_table <-  texpr(bg, 'all')
 whole_tx_table
 ```
 
+## Load all gene expression data
+```{r load-gene-expression-data}
+whole_gx_table <-  gexpr(bg)
+head(whole_gx_table)
+```
+
 ## Generate boxplots to compare FPKM across all samples
 ```{r boxplots-to-compare-FPKM-across-all-samples} 
 # Pull all transcript expression values stored in FPKM measurement from ballgown object
@@ -306,7 +312,7 @@ head(DEG_sex_filtered_stat_results)
 
 
 # Merge with full table to get subset of just differentially expressed isoforms
-merged_DEG_sex_filtered <- merge(x = DEG_sex_filtered_stat_results, y = whole_tx_table, by.x = "id", by.y = "t_id")
+merged_DEG_sex_filtered <- merge(x = DEG_sex_filtered_stat_results, y = whole_tx_table, by.x = "id", by.y = "gene_id")
 head(merged_DEG_sex_filtered)
 
 

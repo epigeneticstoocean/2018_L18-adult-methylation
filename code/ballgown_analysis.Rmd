@@ -264,8 +264,9 @@ nrow(DET_sex_filtered_stat_results)
 merged_DET_sex_filtered <- merge(x = DET_sex_filtered_stat_results, y = whole_tx_table, by.x = "id", by.y = "t_id")
 head(merged_DET_sex_filtered)
 
-# Convert to BED coordinate system, which is 0-based; so need to subtract 1 from each coordinate
-merged_DET_sex_filtered <- merged_DET_sex_filtered %>% mutate(start = start -1, end = end -1)
+# Convert to BED coordinate system, which is 0-based start
+# and end EXCLUSIVE; so need to subtract 1 from start coordinates ONLY
+merged_DET_sex_filtered <- merged_DET_sex_filtered %>% mutate(start = start -1)
 head(merged_DET_sex_filtered)
 
 
@@ -329,8 +330,9 @@ write.csv(
 # Inspect full merged file
 head(merged_DEG_sex_filtered)
 
-# Convert to BED coordinate system, which is 0-based; so need to subtract 1 from each coordinate
-merged_DEG_sex_filtered <- merged_DEG_sex_filtered %>% mutate(start = start -1, end = end -1)
+# Convert to BED coordinate system, which is 0-based start
+# and end EXCLUSIVE; so need to subtract 1 from start coordinates ONLY
+merged_DEG_sex_filtered <- merged_DEG_sex_filtered %>% mutate(start = start -1)
 head(merged_DEG_sex_filtered)
 
 # Creates a BED file and inserts necessary columns to create properly formatted BED file. 

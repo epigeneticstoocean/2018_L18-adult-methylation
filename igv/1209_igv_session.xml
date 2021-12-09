@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Session genome="https://owl.fish.washington.edu/halfshell/genomic-databank/Cvirginica_v300.fa" hasGeneTrack="false" hasSequenceTrack="true" locus="NC_035781.1:27587386-31124550" nextAutoscaleGroup="2" version="8">
+<Session genome="https://owl.fish.washington.edu/halfshell/genomic-databank/Cvirginica_v300.fa" hasGeneTrack="false" hasSequenceTrack="true" locus="NC_035781.1:26715288-30252452" nextAutoscaleGroup="3" version="8">
     <Resources>
         <Resource path="https://gannet.fish.washington.edu/seashell/bu-mox/scrubbed/120321-cvBS/44F_R1_val_1_10x.bedgraph" type="bedgraph"/>
         <Resource path="https://gannet.fish.washington.edu/seashell/bu-mox/scrubbed/120321-cvBS/54F_R1_val_1_10x.bedgraph" type="bedgraph"/>
@@ -27,7 +27,7 @@
         <Resource name="DET_sex_filtered_p-0.05_q-0.05.bed" path="https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/igv/DET_sex_filtered_p-0.05_q-0.05.bed" type="bed"/>
     </Resources>
     <Panel height="600" name="DataPanel" width="1696">
-        <Track attributeKey="12M_R1_val_1_10x.bedgraph" autoScale="false" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="https://gannet.fish.washington.edu/seashell/bu-mox/scrubbed/120321-cvBS/3F_R1_val_1_10x.bedgraph" name="3F_R1_val_1_10x.bedgraph" renderer="BAR_CHART" visible="true" windowFunction="mean">
+        <Track attributeKey="12M_R1_val_1_10x.bedgraph" autoScale="false" clazz="org.broad.igv.track.DataSourceTrack" color="204,0,0" fontSize="10" id="https://gannet.fish.washington.edu/seashell/bu-mox/scrubbed/120321-cvBS/3F_R1_val_1_10x.bedgraph" name="3F_R1_val_1_10x.bedgraph" renderer="BAR_CHART" visible="true" windowFunction="mean">
             <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="100.0" minimum="0.0" type="LINEAR"/>
         </Track>
         <Track attributeKey="41F_R1_val_1_10x.bedgraph" autoScale="false" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="https://gannet.fish.washington.edu/seashell/bu-mox/scrubbed/120321-cvBS/41F_R1_val_1_10x.bedgraph" name="41F_R1_val_1_10x.bedgraph" renderer="BAR_CHART" visible="true" windowFunction="mean">

@@ -3,3 +3,17 @@ title: "Bedtools"
 output: html_document
 ---
 
+```{bash}
+head igv/DET_sex_filtered_p-0.05_q-0.05.bed
+head igv/sex_dml.bed 
+```
+
+
+
+```{bash}
+/Applications/bedtools2/bin/intersectBed \
+-a igv/DET_sex_filtered_p-0.05_q-0.05.bed \
+-b igv/sex_dml.bed
+
+```
+

@@ -262,13 +262,6 @@ head(DET_sex_stat_results)
 DET_sex_filtered_stat_results <- filter(DET_sex_stat_results, pval <= pvalue & qval <= qvalue)
 head(DET_sex_filtered_stat_results)
 
-# Count number of DET.
-# Subtract "1" to account for header row.
-count_DET_sex_filtered_stat_results <-  nrow(DET_sex_filtered_stat_results) - 1
-
-# Print number of DET
-cat("Number of", comparison, "DET with p-values and q-values <= ", pvalue, ":", count_DET_sex_filtered_stat_results)
-
 # Merge with full table to get subset of just differentially expressed isoforms
 merged_DET_sex_filtered <- merge(x = DET_sex_filtered_stat_results, y = whole_tx_table, by.x = "id", by.y = "t_id")
 head(merged_DET_sex_filtered)
@@ -289,6 +282,24 @@ head(DET_sex_filtered_female)
 # and end EXCLUSIVE; so need to subtract 1 from start coordinates ONLY
 DET_sex_filtered_male <- filter(merged_DET_sex_filtered, fc > 1) %>% mutate(start = start - 1)
 head(DET_sex_filtered_male)
+
+# Count number of DET.
+count_DET_sex_filtered_stat_results <-  nrow(DET_sex_filtered_stat_results)
+
+# Print number of DET
+cat("Number of", comparison, "DET with p-values and q-values <= ", pvalue, ":", count_DET_sex_filtered_stat_results, "\n")
+
+# Count number of female DET.
+count_DET_sex_filtered_female <-  nrow(DET_sex_filtered_female)
+
+# Print number of female DET
+cat("Number of female DET with p-values and q-values <= ", pvalue, ":", count_DET_sex_filtered_female, "\n")
+
+# Count number of male DET.
+count_DET_sex_filtered_male <-  nrow(DET_sex_filtered_male)
+
+# Print number of female DET
+cat("Number of male DET with p-values and q-values <= ", pvalue, ":", count_DET_sex_filtered_male, "\n")
 
 # Write merged dataframe to CSV
 write.csv(
@@ -406,7 +417,7 @@ write.table(
 
 # Count number of DET.
 # Subtract "1" to account for header row.
-count_DEG_sex_filtered_stat_results <-  nrow(DEG_sex_filtered_stat_results) - 1
+count_DEG_sex_filtered_stat_results <-  nrow(DEG_sex_filtered_stat_results)
 
 # Print number of DEG
 cat("Number of ", comparison, " DEG with p-values and q-values <= ", pvalue, ":", count_DEG_sex_filtered_stat_results)

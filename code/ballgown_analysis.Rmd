@@ -416,7 +416,6 @@ write.table(
 )
 
 # Count number of DET.
-# Subtract "1" to account for header row.
 count_DEG_sex_filtered_stat_results <-  nrow(DEG_sex_filtered_stat_results)
 
 # Print number of DEG

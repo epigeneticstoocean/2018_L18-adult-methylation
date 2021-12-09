@@ -250,6 +250,11 @@ ggsave(filename = "../figures/fpkm_f-vs-m_boxplot.pdf")
 ## Identify differentially expressed isofroms between Sex.
 ## Returns FoldChange, too (getFC = TRUE)
 ```{r}
+# Set string describing comparison
+# Used for final printout in chunk
+comparison <- "female vs. male"
+
+
 DET_sex_stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="Sex", getFC = TRUE)
 head(DET_sex_stat_results)
 
@@ -257,8 +262,12 @@ head(DET_sex_stat_results)
 DET_sex_filtered_stat_results <- filter(DET_sex_stat_results, pval <= pvalue & qval <= qvalue)
 head(DET_sex_filtered_stat_results)
 
-# Print number of rows
-nrow(DET_sex_filtered_stat_results)
+# Count number of DET.
+# Subtract "1" to account for header row.
+count_DET_sex_filtered_stat_results <-  nrow(DET_sex_filtered_stat_results) - 1
+
+# Print number of DET
+cat("Number of", comparison, "DET with p-values and q-values <= ", pvalue, ":", count_DET_sex_filtered_stat_results)
 
 # Merge with full table to get subset of just differentially expressed isoforms
 merged_DET_sex_filtered <- merge(x = DET_sex_filtered_stat_results, y = whole_tx_table, by.x = "id", by.y = "t_id")
@@ -266,9 +275,20 @@ head(merged_DET_sex_filtered)
 
 # Convert to BED coordinate system, which is 0-based start
 # and end EXCLUSIVE; so need to subtract 1 from start coordinates ONLY
-merged_DET_sex_filtered <- merged_DET_sex_filtered %>% mutate(start = start -1)
+merged_DET_sex_filtered <- merged_DET_sex_filtered %>% mutate(start = start - 1)
 head(merged_DET_sex_filtered)
 
+# Filter for female up-regulated transcripts (i.e. fold-change < 1)
+# Convert to BED coordinate system, which is 0-based start
+# and end EXCLUSIVE; so need to subtract 1 from start coordinates ONLY
+DET_sex_filtered_female <- filter(merged_DET_sex_filtered, fc < 1) %>% mutate(start = start - 1)
+head(DET_sex_filtered_female)
+
+# Filter for male up-regulated transcripts (i.e. fold-change < 1)
+# Convert to BED coordinate system, which is 0-based start
+# and end EXCLUSIVE; so need to subtract 1 from start coordinates ONLY
+DET_sex_filtered_male <- filter(merged_DET_sex_filtered, fc > 1) %>% mutate(start = start - 1)
+head(DET_sex_filtered_male)
 
 # Write merged dataframe to CSV
 write.csv(
@@ -277,20 +297,52 @@ write.csv(
   quote = FALSE, 
   row.names = FALSE)
 
-# Inspect full merged file
-head(merged_DET_sex_filtered)
 
-# Creates a BED file and inserts necessary columns to create properly formatted BED file. 
+# Creates a BED file of all DETs and inserts necessary columns to create properly formatted BED file. 
 write.table(
   (
     merged_DET_sex_filtered %>% 
     select(chr, start, end, t_name, strand) %>% 
       add_column(
-        score = "0", # Inserts a "score" columns and assigns a value of "0" to all rows.
+        score = "0", # Inserts a "score" column and assigns a value of "0" to all rows.
         .before = "strand"
         )
     ), 
   file = "../analyses/DET_sex_filtered_p-0.05_q-0.05.bed",
+  sep = "\t",
+  col.names = FALSE,
+  row.names = FALSE,
+  quote = FALSE
+)
+
+# Creates a BED file of only female DETs and inserts necessary columns to create properly formatted BED file. 
+write.table(
+  (
+    DET_sex_filtered_female %>% 
+    select(chr, start, end, t_name, strand) %>% 
+      add_column(
+        score = "0", # Inserts a "score" column and assigns a value of "0" to all rows.
+        .before = "strand"
+        )
+    ), 
+  file = "../analyses/DET_sex_female_filtered_p-0.05_q-0.05.bed",
+  sep = "\t",
+  col.names = FALSE,
+  row.names = FALSE,
+  quote = FALSE
+)
+
+# Creates a BED file of only male DETs and inserts necessary columns to create properly formatted BED file. 
+write.table(
+  (
+    DET_sex_filtered_male %>% 
+    select(chr, start, end, t_name, strand) %>% 
+      add_column(
+        score = "0", # Inserts a "score" column and assigns a value of "0" to all rows.
+        .before = "strand"
+        )
+    ), 
+  file = "../analyses/DET_sex_male_filtered_p-0.05_q-0.05.bed",
   sep = "\t",
   col.names = FALSE,
   row.names = FALSE,

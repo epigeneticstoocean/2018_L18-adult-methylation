@@ -17,6 +17,27 @@
         <Track attributeKey="12M_R1_val_1_10x.bedgraph" autoScale="false" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="https://gannet.fish.washington.edu/seashell/bu-mox/scrubbed/120321-cvBS/3F_R1_val_1_10x.bedgraph" name="3F_R1_val_1_10x.bedgraph" renderer="BAR_CHART" visible="true" windowFunction="mean">
             <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="100.0" minimum="0.0" type="LINEAR"/>
         </Track>
+        <Track attributeKey="13M_R1_val_1_10x.bedgraph" autoScale="false" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="https://gannet.fish.washington.edu/seashell/bu-mox/scrubbed/120321-cvBS/13M_R1_val_1_10x.bedgraph" name="13M_R1_val_1_10x.bedgraph" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="100.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track attributeKey="16F_R1_val_1_10x.bedgraph" autoScale="false" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="https://gannet.fish.washington.edu/seashell/bu-mox/scrubbed/120321-cvBS/16F_R1_val_1_10x.bedgraph" name="16F_R1_val_1_10x.bedgraph" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="100.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track attributeKey="19F_R1_val_1_10x.bedgraph" autoScale="false" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="https://gannet.fish.washington.edu/seashell/bu-mox/scrubbed/120321-cvBS/19F_R1_val_1_10x.bedgraph" name="19F_R1_val_1_10x.bedgraph" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="100.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track attributeKey="22F_R1_val_1_10x.bedgraph" autoScale="false" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="https://gannet.fish.washington.edu/seashell/bu-mox/scrubbed/120321-cvBS/22F_R1_val_1_10x.bedgraph" name="22F_R1_val_1_10x.bedgraph" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="100.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track attributeKey="23M_R1_val_1_10x.bedgraph" autoScale="false" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="https://gannet.fish.washington.edu/seashell/bu-mox/scrubbed/120321-cvBS/23M_R1_val_1_10x.bedgraph" name="23M_R1_val_1_10x.bedgraph" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="100.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track attributeKey="29F_R1_val_1_10x.bedgraph" autoScale="false" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="https://gannet.fish.washington.edu/seashell/bu-mox/scrubbed/120321-cvBS/29F_R1_val_1_10x.bedgraph" name="29F_R1_val_1_10x.bedgraph" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="100.0" minimum="0.0" type="LINEAR"/>
+        </Track>
+        <Track attributeKey="12M_R1_val_1_10x.bedgraph" autoScale="false" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="https://gannet.fish.washington.edu/seashell/bu-mox/scrubbed/120321-cvBS/12M_R1_val_1_10x.bedgraph" name="12M_R1_val_1_10x.bedgraph" renderer="BAR_CHART" visible="true" windowFunction="mean">
+            <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="100.0" minimum="0.0" type="LINEAR"/>
+        </Track>
         <Track attributeKey="13M_R1_val_1_10x.bedgraph" autoScale="false" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="https://gannet.fish.washington.edu/seashell/bu-mox/scrubbed/120321-cvBS/6M_R1_val_1_10x.bedgraph" name="6M_R1_val_1_10x.bedgraph" renderer="BAR_CHART" visible="true" windowFunction="mean">
             <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="100.0" minimum="0.0" type="LINEAR"/>
         </Track>
@@ -34,7 +55,7 @@
         </Track>
         <Track attributeKey="29F_R1_val_1_10x.bedgraph" autoScale="false" clazz="org.broad.igv.track.DataSourceTrack" fontSize="10" id="https://gannet.fish.washington.edu/seashell/bu-mox/scrubbed/120321-cvBS/6M_R1_val_1_10x.bedgraph" name="6M_R1_val_1_10x.bedgraph" renderer="BAR_CHART" visible="true" windowFunction="mean">
             <DataRange baseline="0.0" drawBaseline="true" flipAxis="false" maximum="100.0" minimum="0.0" type="LINEAR"/>
-        </Track>        
+        </Track>         
     </Panel>
     <Panel height="499" name="FeaturePanel" width="1417">
         <Track attributeKey="Reference sequence" clazz="org.broad.igv.track.SequenceTrack" fontSize="10" id="Reference sequence" name="Reference sequence" sequenceTranslationStrandValue="POSITIVE" shouldShowTranslation="false" visible="true"/>

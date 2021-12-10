@@ -4,9 +4,17 @@ output: html_document
 ---
 
 ```{bash}
-cd ..
-pwd
+cd ../genome-features
+curl --insecure -O https://eagle.fish.washington.edu/Cvirg_tracks/C_virginica-3.0_Gnomon_mRNA.gff3
+
+
+
+
 ```
+
+
+
+
 
 
 ```{bash}
@@ -20,14 +28,34 @@ head /Users/sr320/Desktop/2019-04-05-DML-Destrand-5x-Locations.bed
 ```
 
 
+
+
 ```{bash}
 cd ..
-/Applications/bedtools2/bin/intersectBed \
--a igv/DET_sex_filtered_p-0.05_q-0.05.bed \
--b igv/sex_dml.bed \
+/home/shared/bedtools2/bin/intersectBed \
+-wb \
+-a igv/oao_dml.bed \
+-b genome-features/C_virginica-3.0_Gnomon_mRNA.gff3 \
 | head
 
 ```
+
+
+```{bash}
+cd ..
+/home/shared/bedtools2/bin/intersectBed \
+-wb \
+-a igv/oao_dml.bed \
+-b genome-features/C_virginica-3.0_Gnomon_mRNA_yrv.gff3 \
+| head
+
+```
+
+
+
+
+
+
 
 ```{bash}
 /Applications/bedtools2/bin/intersectBed \

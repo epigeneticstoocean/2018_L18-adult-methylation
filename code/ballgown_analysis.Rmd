@@ -24,7 +24,7 @@ REQUIRES the following Bash programs:
 
 REQUIRES the following R libraries:
 
-- `[Ballgown](https://github.com/alyssafrazee/ballgown)` (Bioconductor)
+- [`Ballgown`](https://github.com/alyssafrazee/ballgown) (Bioconductor)
 
 - `tidyverse`
 
@@ -203,7 +203,7 @@ structure(bg)$trans
 ```{r}
 # Expression data
 whole_tx_table <-  texpr(bg, 'all')
-whole_tx_table
+head(whole_tx_table)
 
 gene_table <- whole_tx_table %>% select(!t_name)
 head(gene_table)
@@ -217,6 +217,9 @@ head(whole_gx_table)
 
 ## Generate boxplots to compare FPKM across all samples
 ```{r boxplots-to-compare-FPKM-across-all-samples} 
+# Load phenotype info into Ballgown
+pData(bg) <- sample_metadata_subset
+
 # Pull all transcript expression values stored in FPKM measurement from ballgown object
 fpkm <- texpr(bg, meas = "FPKM")
 
@@ -245,7 +248,7 @@ head(fpkm_df_pivot_sorted)
 fpkm_libraries_sorted_unique <- (unique(fpkm_df_pivot_sorted$library))
 head(fpkm_libraries_sorted_unique)
 
-# Re-rder data frame by sex-sorted data
+# Re-order data frame by sex-sorted data
 fpkm_df_pivot$library <- factor(fpkm_df_pivot$library, levels = fpkm_libraries_sorted_unique)
 
 
@@ -258,19 +261,22 @@ ggplot(fpkm_df_pivot, aes(library, value, color = sex)) +
   ylab("FPKM") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 
-# Save boxplot
+# Save boxplot as PDF
 ggsave(filename = "../figures/fpkm_f-vs-m_boxplot.pdf")
 
 ```
 
-## Identify differentially expressed transcripts between Sex.
+## Identify differentially expressed transcripts (DETs) between sex.
 ## Returns FoldChange, too (getFC = TRUE)
-```{r}
+```{r DETs-female-vs.-male}
 # Set string describing comparison
 # Used for final printout in chunk
 comparison <- "female vs. male"
 
+# Load phenotype info into Ballgown
+pData(bg) <- sample_metadata_subset
 
+# Identify DETs
 DET_sex_stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="Sex", getFC = TRUE)
 head(DET_sex_stat_results)
 
@@ -317,6 +323,8 @@ count_DET_sex_filtered_male <-  nrow(DET_sex_filtered_male)
 # Print number of male DET
 cat("Number of male DET with p-values and q-values <= ", pvalue, ":", count_DET_sex_filtered_male, "\n")
 
+
+#########################################################################################################
 # Write merged dataframe to CSV
 write.csv(
   merged_DET_sex_filtered, 
@@ -379,11 +387,13 @@ write.table(
 
 ## Identify differentially expressed genes (DEG) between Sex.
 ## Returns FoldChange, too (getFC = TRUE)
-```{r female-male-DEG}
-
+```{r DEGs-female-vs.-male}
 # Set string describing comparison
 # Used for final printout in chunk
 comparison <- "female vs. male"
+
+# Load phenotype info into Ballgown
+pData(bg) <- sample_metadata_subset
 
 # Determine differentially expressed genes with ballgown
 DEG_sex_stat_results = stattest(bg, feature='gene', meas='FPKM', covariate="Sex", getFC = TRUE)
@@ -417,7 +427,25 @@ head(DEG_sex_filtered_female)
 DEG_sex_filtered_male <- filter(merged_DEG_sex_filtered_genes_only, fc > 1)
 head(DEG_sex_filtered_male)
 
+# Count number of DEG.
+count_merged_DEG_sex_filtered_genes_only <-  nrow(merged_DEG_sex_filtered_genes_only)
 
+# Print number of DEG
+cat("Number of ", comparison, " DEG with p-values and q-values <= ", pvalue, ":", count_merged_DEG_sex_filtered_genes_only, "\n")
+
+# Count number of female DEG.
+count_DEG_sex_filtered_female <-  nrow(DEG_sex_filtered_female)
+
+# Print number of female DEG.
+cat("Number of female DEG with p-values and q-values <= ", pvalue, ":", count_DEG_sex_filtered_female, "\n")
+
+# Count number of male DEG.
+count_DEG_sex_filtered_male <-  nrow(DEG_sex_filtered_male)
+
+# Print number of male DEG.
+cat("Number of male DEG with p-values and q-values <= ", pvalue, ":", count_DEG_sex_filtered_male, "\n")
+
+#########################################################################################################
 # Write merged dataframe to CSV
 write.csv(
   merged_DEG_sex_filtered, 
@@ -463,24 +491,6 @@ write.table(
   row.names = FALSE,
   quote = FALSE
 )
-
-# Count number of DEG.
-count_DEG_sex_filtered_stat_results <-  nrow(merged_DEG_sex_filtered_genes_only)
-
-# Print number of DEG
-cat("Number of ", comparison, " DEG with p-values and q-values <= ", pvalue, ":", count_DEG_sex_filtered_stat_results, "\n")
-
-# Count number of female DEG.
-count_DEG_sex_filtered_female <-  nrow(DEG_sex_filtered_female)
-
-# Print number of female DEG.
-cat("Number of female DEG with p-values and q-values <= ", pvalue, ":", count_DEG_sex_filtered_female, "\n")
-
-# Count number of male DEG.
-count_DEG_sex_filtered_male <-  nrow(DEG_sex_filtered_male)
-
-# Print number of male DEG.
-cat("Number of male DEG with p-values and q-values <= ", pvalue, ":", count_DEG_sex_filtered_male, "\n")
 ```
 
 

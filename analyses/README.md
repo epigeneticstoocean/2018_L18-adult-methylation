@@ -31,7 +31,7 @@ columns 4 (`name`), 5 (`score`), and 6 (`strand`). The `name` column is the tran
 
   - `FPKM.*`: Relative expression levels for each transcript in each sample.
 
-- `DET_sex_filtered_p-0.05_q-0.05.bed`: BED file of differentially expressed transcripts (DET) identified between sexes, filtered for DET having p-values and q-values <= 0.05. Includes optional
+- `DET_sex_female_filtered_p-0.05_q-0.05.bed`: BED file of differentially expressed transcripts (DET) up-regulated in females only, filtered for DET having p-values and q-values <= 0.05. Includes optional
 columns 4 (`name`), 5 (`score`), and 6 (`strand`). The `name` column is the transcript ID assigned by `ballgown`. The `score` column has been assigned an arbitrary value of 0.
 
 - `merged_DET_sex_filtered_p-0.05_q-0.05.csv`: Differentially expressed transcripts (DET) identified between sexes, filtered for DET having p-values and q-values <= 0.05. Contains the following columns:
@@ -59,3 +59,6 @@ columns 4 (`name`), 5 (`score`), and 6 (`strand`). The `name` column is the tran
   - `cov.*`: Sequencing read coverage for transcript for each sample.
 
   - `FPKM.*`: Relative expression levels for each transcript in each sample.
+
+- `DET_sex_male_filtered_p-0.05_q-0.05.bed`: BED file of differentially expressed transcripts (DET) up-regulated in ales only, filtered for DET having p-values and q-values <= 0.05. Includes optional
+columns 4 (`name`), 5 (`score`), and 6 (`strand`). The `name` column is the transcript ID assigned by `ballgown`. The `score` column has been assigned an arbitrary value of 0.

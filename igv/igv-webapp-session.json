@@ -1,0 +1,36 @@
+{
+	"version": "2.10.4",
+	"showSampleNames": false,
+	"reference": {
+		"fastaURL": "https://owl.fish.washington.edu/halfshell/genomic-databank/Cvirginica_v300.fa",
+		"indexURL": "https://owl.fish.washington.edu/halfshell/genomic-databank/Cvirginica_v300.fa.fai"
+	},
+	"locus": "NC_035785.1:1-51,258,098",
+	"tracks": [
+		{
+			"type": "sequence",
+			"order": -9007199254740991
+		},
+		{
+			"url": "https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/igv/4cond_dml.bed",
+			"name": "4cond_dml.bed",
+			"format": "bed",
+			"type": "annotation",
+			"order": 3
+		},
+		{
+			"url": "https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/igv/DET_sex_filtered_p-0.05_q-0.05.bed",
+			"name": "DET_sex_filtered_p-0.05_q-0.05.bed",
+			"format": "bed",
+			"type": "annotation",
+			"order": 4
+		},
+		{
+			"url": "https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/igv/oao_dml.bed",
+			"name": "oao_dml.bed",
+			"format": "bed",
+			"type": "annotation",
+			"order": 5
+		}
+	]
+}

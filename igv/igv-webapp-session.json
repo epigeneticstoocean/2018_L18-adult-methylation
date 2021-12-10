@@ -5,7 +5,7 @@
 		"fastaURL": "https://owl.fish.washington.edu/halfshell/genomic-databank/Cvirginica_v300.fa",
 		"indexURL": "https://owl.fish.washington.edu/halfshell/genomic-databank/Cvirginica_v300.fa.fai"
 	},
-	"locus": "NC_035785.1:1-51,258,098",
+	"locus": "NC_035781.1:1-61,752,955",
 	"tracks": [
 		{
 			"type": "sequence",
@@ -26,11 +26,32 @@
 			"order": 4
 		},
 		{
+			"url": "https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/igv/DET_sex_filtered_p-0.05_q-0.05.bed",
+			"name": "DET_sex_filtered_p-0.05_q-0.05.bed",
+			"format": "bed",
+			"type": "annotation",
+			"order": 8
+		},
+		{
 			"url": "https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/igv/oao_dml.bed",
 			"name": "oao_dml.bed",
 			"format": "bed",
 			"type": "annotation",
-			"order": 5
+			"order": 9
+		},
+		{
+			"url": "https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/genome-features/C_virginica-3.0_Gnomon_gene_yrv.gff3",
+			"name": "C_virginica-3.0_Gnomon_gene_yrv.gff3",
+			"format": "gff3",
+			"type": "annotation",
+			"order": 10
+		},
+		{
+			"url": "https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/genome-features/C_virginica-3.0_Gnomon_mRNA_yrv.gff3",
+			"name": "C_virginica-3.0_Gnomon_mRNA_yrv.gff3",
+			"format": "gff3",
+			"type": "annotation",
+			"order": 11
 		}
 	]
 }

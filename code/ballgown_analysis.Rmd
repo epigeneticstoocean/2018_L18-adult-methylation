@@ -399,21 +399,22 @@ head(DEG_sex_filtered_stat_results)
 merged_DEG_sex_filtered <- merge(x = DEG_sex_filtered_stat_results, y = whole_tx_table, by.x = "id", by.y = "gene_id")
 head(merged_DEG_sex_filtered)
 
-merged_DEG_sex_filtered_genes_only <- merge(x = DEG_sex_filtered_stat_results, y = genes_BED, by.x = "id", by.y = "V4")
+# Merge with BED file to get DEGs WITHOUT associated transcripts
+merged_DEG_sex_filtered_genes_only <- merge(x = DEG_sex_filtered_stat_results, y = genes_BED, by.x = "id", by.y = "name")
 head(merged_DEG_sex_filtered_genes_only)
 
 
 # Convert to BED coordinate system, which is 0-based start
 # and end EXCLUSIVE; so need to subtract 1 from start coordinates ONLY
-merged_DEG_sex_filtered <- merged_DEG_sex_filtered %>% mutate(start = start -1)
+merged_DEG_sex_filtered_ <- merged_DEG_sex_filtered %>% mutate(start = start -1)
 head(merged_DEG_sex_filtered)
 
 # Filter for female up-regulated genes (i.e. fold-change < 1)
-DEG_sex_filtered_female <- filter(merged_DEG_sex_filtered, fc < 1)
+DEG_sex_filtered_female <- filter(merged_DEG_sex_filtered_genes_only, fc < 1)
 head(DEG_sex_filtered_female)
 
 # Filter for male up-regulated genes (i.e. fold-change < 1)
-DEG_sex_filtered_male <- filter(merged_DEG_sex_filtered, fc > 1)
+DEG_sex_filtered_male <- filter(merged_DEG_sex_filtered_genes_only, fc > 1)
 head(DEG_sex_filtered_male)
 
 
@@ -425,15 +426,10 @@ write.csv(
   row.names = FALSE)
 
 
-# Creates a BED file of all DEG and inserts necessary columns to create properly formatted BED file. 
+# Creates a BED file of all DEG. 
 write.table(
-  (
-    merged_DEG_sex_filtered %>% 
-    select(chr, start, end, t_name, strand) %>% 
-      add_column(
-        score = "0", # Inserts a "score" columns and assigns a value of "0" to all rows.
-        .before = "strand"
-        )
+  (merged_DEG_sex_filtered_genes_only %>% 
+    select(chr, start, end, id, score, strand)
     ), 
   file = "../analyses/DEG_sex_filtered_p-0.05_q-0.05.bed",
   sep = "\t",
@@ -442,16 +438,12 @@ write.table(
   quote = FALSE
 )
 
-# Creates a BED file of only female DEGs and inserts necessary columns to create properly formatted BED file. 
+# Creates a BED file of only female DEGs.
 write.table(
   (
-    DET_sex_filtered_female %>% 
-    select(chr, start, end, t_name, strand) %>% 
-      add_column(
-        score = "0", # Inserts a "score" column and assigns a value of "0" to all rows.
-        .before = "strand"
-        )
-    ), 
+    DEG_sex_filtered_female %>% 
+    select(chr, start, end, id, score, strand)
+    ),
   file = "../analyses/DEG_sex_female_filtered_p-0.05_q-0.05.bed",
   sep = "\t",
   col.names = FALSE,
@@ -459,16 +451,12 @@ write.table(
   quote = FALSE
 )
 
-# Creates a BED file of only male DEGs and inserts necessary columns to create properly formatted BED file. 
+# Creates a BED file of only male DEGs. 
 write.table(
   (
-    DET_sex_filtered_male %>% 
-    select(chr, start, end, t_name, strand) %>% 
-      add_column(
-        score = "0", # Inserts a "score" column and assigns a value of "0" to all rows.
-        .before = "strand"
-        )
-    ), 
+    DEG_sex_filtered_male %>% 
+    select(chr, start, end, id, score, strand)
+    ),
   file = "../analyses/DEG_sex_male_filtered_p-0.05_q-0.05.bed",
   sep = "\t",
   col.names = FALSE,
@@ -477,7 +465,7 @@ write.table(
 )
 
 # Count number of DEG.
-count_DEG_sex_filtered_stat_results <-  nrow(merged_DEG_sex_filtered)
+count_DEG_sex_filtered_stat_results <-  nrow(merged_DEG_sex_filtered_genes_only)
 
 # Print number of DEG
 cat("Number of ", comparison, " DEG with p-values and q-values <= ", pvalue, ":", count_DEG_sex_filtered_stat_results, "\n")
@@ -561,4 +549,45 @@ count_filtered_stat_results <-  nrow(filtered_stat_results) - 1
 
 # Print number of DET
 cat("Number of DET with p-values and q-values <= ", pvalue, ":", count_filtered_stat_results)
+```
+
+## Identify differentially expressed genes between Treatment (control/exposed).
+## Returns FoldChange, too (getFC = TRUE)
+```{r control-exposed-DEG}
+# Load phenotype info into Ballgown
+pData(bg) <- sample_metadata_subset
+# Examine phenotype data as it exists in Ballgown
+phenotype_table <-  pData(bg)
+
+stat_results = stattest(bg, feature='gene', meas='FPKM', covariate="Treatment", getFC = TRUE)
+head(stat_results)
+
+# Filter DEG based on set p-avlues and q-values
+filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
+head(filtered_stat_results)
+
+# Count number of DEG.
+count_filtered_stat_results <-  nrow(filtered_stat_results)
+
+# Print number of DEG
+cat("Number of DEG with p-values and q-values <= ", pvalue, ":", count_filtered_stat_results)
+```
+## Identify differentially expressed genes between Treatment.
+## NOTE: Will not return fold change; not possible in multi-group comparisons
+```{r all-treatments-DEG}
+# Load phenotype info into Ballgown
+pData(bg) <- sample_metadata_subset
+
+stat_results = stattest(bg, feature='gene', meas='FPKM', covariate="TreatmentN")
+head(stat_results)
+
+# Filter DEG based on set p-avlues and q-values
+filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
+head(filtered_stat_results)
+
+# Count number of DETG.
+count_filtered_stat_results <-  nrow(filtered_stat_results)
+
+# Print number of DEG
+cat("Number of DEG with p-values and q-values <= ", pvalue, ":", count_filtered_stat_results)
 ```

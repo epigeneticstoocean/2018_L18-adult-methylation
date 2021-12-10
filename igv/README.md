@@ -8,6 +8,8 @@
 
 - `4cond_dml.bed`:
 
+- `C_virginica-3.0_Gnomon_genes.bed`: BED file of genes from NCBI `GCF_002022765.2_C_virginica-3.0`.
+
 - `DEG_sex_filtered_p-0.05_q-0.05.bed`: BED file of differentially expressed genes (DEG) identified between sexes, filtered for DEG having p-values and q-values <= 0.05. Includes optional
 columns 4 (`name`), 5 (`score`), and 6 (`strand`). The `name` column is the transcript ID assigned by `ballgown`. The `score` column has been assigned an arbitrary value of 0.
 

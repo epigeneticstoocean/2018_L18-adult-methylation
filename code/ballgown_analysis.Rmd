@@ -167,6 +167,20 @@ mutated_sample_metadata_subset$TreatmentN[mutated_sample_metadata_subset$Treatme
 
 head(mutated_sample_metadata_subset)
 
+# Create modified metadata for MALES for comparing OA treatments within sexes
+# 1 = CONTROL
+# 3 = EXPOSED
+sample_metadata_subset_male_only <- sample_metadata_subset %>% filter(TreatmentN == "1" | TreatmentN == "3")
+
+head(sample_metadata_subset_male_only)
+
+# Create modified metadata for FEMALES comparing OA treatments within sexes
+# 2 = CONTROL
+# 4 = EXPOSED
+sample_metadata_subset_female_only <- sample_metadata_subset %>% filter(TreatmentN == "2" | TreatmentN == "4")
+
+head(sample_metadata_subset_male_only)
+
 ```
 
 
@@ -600,4 +614,45 @@ count_filtered_stat_results <-  nrow(filtered_stat_results)
 
 # Print number of DEG
 cat("Number of DEG with p-values and q-values <= ", pvalue, ":", count_filtered_stat_results)
+```
+
+
+## Identify differentially expressed transcripts (DETs) between Treatment within females.
+## Returns FoldChange, too (getFC = TRUE)
+```{r DETs-female-OA}
+# Load phenotype info into Ballgown
+pData(bg) <- sample_metadata_subset_female_only
+
+stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="TreatmentN", getFC = TRUE)
+head(stat_results)
+
+# Filter DT based on set p-values and q-values
+filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
+head(filtered_stat_results)
+
+# Count number of DETG.
+count_filtered_stat_results <-  nrow(filtered_stat_results)
+
+# Print number of DEG
+cat("Number of female OA DETs with p-values and q-values <= ", pvalue, ":", count_filtered_stat_results)
+```
+
+## Identify differentially expressed transcripts (DETs) between Treatment within males
+## Returns FoldChange, too (getFC = TRUE)
+```{r DETs-female-OA}
+# Load phenotype info into Ballgown
+pData(bg) <- sample_metadata_subset_male_only
+
+stat_results = stattest(bg, feature='transcript', meas='FPKM', covariate="TreatmentN", getFC = TRUE)
+head(stat_results)
+
+# Filter DT based on set p-values and q-values
+filtered_stat_results <- filter(stat_results, pval <= pvalue & qval <= qvalue)
+head(filtered_stat_results)
+
+# Count number of DETG.
+count_filtered_stat_results <-  nrow(filtered_stat_results)
+
+# Print number of DEG
+cat("Number of male OA DETs with p-values and q-values <= ", pvalue, ":", count_filtered_stat_results)
 ```

@@ -46,8 +46,7 @@ cd ..
 /home/shared/bedtools2/bin/intersectBed \
 -wb \
 -a igv/oao_dml.bed \
--b genome-features/C_virginica-3.0_Gnomon_mRNA_yrv.gff3 \
-| head
+-b genome-features/C_virginica-3.0_Gnomon_mRNA_yrv.gff3 
 
 ```
 

@@ -90,30 +90,40 @@ myobj_m = processBismarkAln(location = file.list_male,
 
 ```{r eval=FALSE, include=FALSE}
 myobj_f = processBismarkAln(location = file.list_female,
-  sample.id = list("12M","13M","16F","19F","22F","23M","29F","31M", "35F","36F","39F","3F","41F","44F","48M","50F","52F","53F","54F","59M","64M","6M","76F", "77F","7M","9M"),
+  sample.id = list("16F","19F","22F","29F","35F","36F","39F","3F","41F","44F","50F","52F","53F","54F","76F", "77F"),
   assembly = "cv",
   read.context="CpG",
   mincov=2,
-  treatment =  c(1,1,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,1,1))
+  treatment =  c(0,0,1,1,1,1,0,1,1,0,1,0,0,0,0,1))
 ```
 
 
 
 
 ```{r include=FALSE}
-save(myobj_oa, file = "../analyses/myobj_oa")
+save(myobj_m, file = "../analyses/myobj_m")
 
+```
+
+```{r include=FALSE}
+save(myobj_f, file = "../analyses/myobj_f")
+
+```
+
+```{r include=FALSE}
+load("../analyses/myobj_m")
 ```
 
 
 
 ```{r include=FALSE}
-load("../analyses/myobj_oa")
+load("../analyses/myobj_f")
 ```
 
+## Male first
 
 ```{r message=FALSE, warning=FALSE}
-filtered.myobj=filterByCoverage(myobj_oa,lo.count=10,lo.perc=NULL,
+filtered.myobj=filterByCoverage(myobj_m,lo.count=10,lo.perc=NULL,
                                       hi.count=NULL,hi.perc=98)
 
 meth_filter=unite(filtered.myobj, min.per.group=NULL, destrand=TRUE)
@@ -126,7 +136,80 @@ PCASamples(meth_filter)
 ```
 
 
+```{r include=FALSE}
+myDiff=calculateDiffMeth(meth_filter,mc.cores=48)
 
+```
+
+
+```{r include=FALSE}
+save(myDiff, file = "../analyses/myDiff_m")
+
+```
+
+
+
+```{r}
+write.table(myDiff, file = "../analyses/myDiff_m.tab", sep = "\t")
+```
+
+
+```{r}
+# get hyper methylated bases
+myDiff_m50p.hyper=getMethylDiff(myDiff,difference=50,qvalue=0.01,type="hyper")
+#
+# get hypo methylated bases
+myDiff_m50p.hypo=getMethylDiff(myDiff,difference=50,qvalue=0.01,type="hypo")
+#
+#
+# get all differentially methylated bases
+myDiff_m50p=getMethylDiff(myDiff,difference=50,qvalue=0.01)
+```
+
+
+
+
+```{r}
+write.table(myDiff_m50p, file = "../analyses/myDiff_m50p.tab", sep = "\t")
+```
+
+
+
+```{r}
+myDiff_m50p.tab <- read.csv(file = "../analyses/myDiff_m50p.tab", sep = "\t")
+```
+
+
+
+
+```{r}
+m_dml <- dplyr::select(myDiff_m50p.tab, chr, start, end, meth.diff) %>% 
+  mutate(start = start -1) %>% 
+  mutate(end = end +1) %>%
+  mutate_if(is.numeric, as.integer) %>% 
+  mutate(TYPE ="oao_DML") %>% 
+  select(chr, start, end, TYPE, meth.diff) 
+
+write.table(m_dml, file = "../analyses/male_dml.bed", sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)
+```
+
+
+
+
+# Female 
+
+```{r message=FALSE, warning=FALSE}
+filtered.myobj=filterByCoverage(myobj_f,lo.count=10,lo.perc=NULL,
+                                      hi.count=NULL,hi.perc=98)
+
+meth_filter=unite(filtered.myobj, min.per.group=NULL, destrand=TRUE)
+
+clusterSamples(meth_filter, dist="correlation", method="ward", plot=TRUE)
+
+
+PCASamples(meth_filter)
+
+```
 
 
 ```{r include=FALSE}
@@ -136,66 +219,55 @@ myDiff=calculateDiffMeth(meth_filter,mc.cores=48)
 
 
 ```{r include=FALSE}
-save(myDiff, file = "../analyses/myDiff_oa")
+save(myDiff, file = "../analyses/myDiff_m")
 
 ```
-
-
-```{r include=FALSE}
-load("../analyses/myDiff_oa")
-```
-
-
 
 
 
 ```{r}
-write.table(myDiff, file = "../analyses/myDiff_oa.tab", sep = "\t")
+write.table(myDiff, file = "../analyses/myDiff_m.tab", sep = "\t")
 ```
-
-
 
 
 ```{r}
 # get hyper methylated bases
-myDiff_oa50p.hyper=getMethylDiff(myDiff,difference=50,qvalue=0.01,type="hyper")
+myDiff_m50p.hyper=getMethylDiff(myDiff,difference=50,qvalue=0.01,type="hyper")
 #
 # get hypo methylated bases
-myDiff_oa50p.hypo=getMethylDiff(myDiff,difference=50,qvalue=0.01,type="hypo")
+myDiff_m50p.hypo=getMethylDiff(myDiff,difference=50,qvalue=0.01,type="hypo")
 #
 #
 # get all differentially methylated bases
-myDiff_oa50p=getMethylDiff(myDiff,difference=50,qvalue=0.01)
+myDiff_m50p=getMethylDiff(myDiff,difference=50,qvalue=0.01)
 ```
 
 
 
 
 ```{r}
-write.table(myDiff_oa50p, file = "../analyses/myDiff_oa50p.tab", sep = "\t")
+write.table(myDiff_m50p, file = "../analyses/myDiff_m50p.tab", sep = "\t")
 ```
 
 
 
 ```{r}
-myDiff_oa50p.tab <- read.csv(file = "../analyses/myDiff_oa50p.tab", sep = "\t")
+myDiff_m50p.tab <- read.csv(file = "../analyses/myDiff_m50p.tab", sep = "\t")
 ```
 
 
 
 
 ```{r}
-oao_dml <- dplyr::select(myDiff_oa50p.tab, chr, start, end, meth.diff) %>% 
+m_dml <- dplyr::select(myDiff_m50p.tab, chr, start, end, meth.diff) %>% 
   mutate(start = start -1) %>% 
   mutate(end = end +1) %>%
   mutate_if(is.numeric, as.integer) %>% 
   mutate(TYPE ="oao_DML") %>% 
   select(chr, start, end, TYPE, meth.diff) 
 
-write.table(oao_dml, file = "../analyses/oao_dml.bed", sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)
+write.table(m_dml, file = "../analyses/male_dml.bed", sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)
 ```
-
-
 
 
 

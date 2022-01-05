@@ -719,15 +719,18 @@ treatments <- c(1:4)
 # Vector of comparisons to make
 comparisons <- c("2v4", "1v3", "2_4v1_3", "1_2v3_4")
 
-# Create ballgown objects containing only data from individual treatments
-treatment_fpkm_list <- list() # Declare list
+# Declare list
+treatment_fpkm_list <- list()
+
 for (treatment in treatments) {
   
-  # Assigns subsetted ballgown data to new ballgown object
+  # Create ballgown objects containing only data from individual treatments
   bg_name <- ballgown::subset(bg, "TreatmentN == treatment", genomesubset = FALSE) 
   
   # Extract transcript FPKMs and add to list
   treatment_fpkm_list[[treatment]] <- texpr(bg_name) 
-  }
+}
+
+
 
 ```

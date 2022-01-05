@@ -717,7 +717,7 @@ exposed females = 4
 treatments <- c(1:4)
 
 # Vector of comparisons to make
-comparisons <- c("2v4", "1v3", "2_4v1_3", "1_2v3_4")
+comparisons <- c("t2.v.t4", "t1.v.t3", "t2_t4.v.t1_t3", "t1_t2.v.t3_t4")
 
 # Declare list
 treatment_fpkm_list <- list()
@@ -732,5 +732,31 @@ for (treatment in treatments) {
 }
 
 
+# Create data frame with coefficients of variation for each Treatment group
+for (index in 1:length(treatment_fpkm_list))  {
+    
+  # Set treatment column name
+  treatment_col <- paste("Treatment", index, "_", "FPKM_Coeff_of_Var", sep = "")
+  
+  print(index)
+  print(treatment_col)
+  
+  # Checks is dataframe exists
+  if (exists("treatment_fpkm_CoV_df")) {
+    
+    # Add new column with coefficients of variations for each subsequnt TreatmentN
+    treatment_fpkm_CoV_df$column <- rowcvs(treatment_fpkm_list[[index]], unbiased = TRUE)
+  }
+  
+  else {
+    # Creates initial dataframe with coefficient of variations for FPKM in Treatment 1
+    treatment_fpkm_CoV_df <- as.data.frame(rowcvs(treatment_fpkm_list[[index]], unbiased = TRUE))
+  }
+  
+      # Renames first column
+    names(treatment_fpkm_CoV_df)[index] <- treatment_col
+}
+
+write.csv(treatment_fpkm_CoV_df, "../analyses/treatment_fpkm_CoV_df.csv", row.names = FALSE, quote = FALSE)
 
 ```

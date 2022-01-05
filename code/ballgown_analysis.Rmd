@@ -758,6 +758,9 @@ for (index in 1:length(treatment_fpkm_list))  {
     names(treatment_fpkm_CoV_df)[index] <- treatment_col
 }
 
+treatment_fpkm_CoV_df <- treatment_fpkm_CoV_df %>% 
+  rownames_to_column(var = "t_id")
+
 # Check data frame
 head(treatment_fpkm_CoV_df)
 

@@ -716,12 +716,11 @@ exposed females = 4
 # Vector of treatments
 treatments <- c(1:4)
 
-# Vector of comparisons to make
-comparisons <- c("t2.v.t4", "t1.v.t3", "t2_t4.v.t1_t3", "t1_t2.v.t3_t4")
-
 # Declare list
 treatment_fpkm_list <- list()
 
+# Create list of FPKMs by treatment.
+# Ordered in the list as listed above for the "TreatmentN" column explanation.
 for (treatment in treatments) {
   
   # Create ballgown objects containing only data from individual treatments
@@ -732,31 +731,37 @@ for (treatment in treatments) {
 }
 
 
+
+# Remove data frame if it exists.
+# Prevent problem of re-running and appending more data to existing data frame below.
+rm(treatment_fpkm_CoV_df)
+
 # Create data frame with coefficients of variation for each Treatment group
 for (index in 1:length(treatment_fpkm_list))  {
     
   # Set treatment column name
   treatment_col <- paste("Treatment", index, "_", "FPKM_Coeff_of_Var", sep = "")
   
-  print(index)
-  print(treatment_col)
-  
-  # Checks is dataframe exists
+  # Checks is data frame exists
   if (exists("treatment_fpkm_CoV_df")) {
     
-    # Add new column with coefficients of variations for each subsequnt TreatmentN
+    # Add new column with coefficients of variation for each subsequent TreatmentN
     treatment_fpkm_CoV_df$column <- rowcvs(treatment_fpkm_list[[index]], unbiased = TRUE)
   }
   
   else {
-    # Creates initial dataframe with coefficient of variations for FPKM in Treatment 1
+    # Creates initial data frame with coefficients of variation for FPKM in Treatment 1
     treatment_fpkm_CoV_df <- as.data.frame(rowcvs(treatment_fpkm_list[[index]], unbiased = TRUE))
   }
   
-      # Renames first column
+    # Renames columns
     names(treatment_fpkm_CoV_df)[index] <- treatment_col
 }
 
+# Check data frame
+head(treatment_fpkm_CoV_df)
+
+# Write data frame to CSV.
 write.csv(treatment_fpkm_CoV_df, "../analyses/treatment_fpkm_CoV_df.csv", row.names = FALSE, quote = FALSE)
 
 ```

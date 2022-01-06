@@ -34,6 +34,7 @@ REQUIRES the following R libraries:
 library("ballgown")
 library("tidyverse")
 library("ggplot2")
+library("Rfast")
 ```
 
 

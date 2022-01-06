@@ -717,6 +717,9 @@ exposed females = 4
 # Vector of treatments
 treatments <- c(1:4)
 
+# Vector of comparisons
+comparisons <- c("all", "f_v_m", "c_v_e", "fc_v_fe", "mc_v_me")
+
 # Declare list
 treatment_fpkm_list <- list()
 
@@ -737,27 +740,68 @@ for (treatment in treatments) {
 # Prevent problem of re-running and appending more data to existing data frame below.
 rm(treatment_fpkm_CoV_df)
 
-# Create data frame with coefficients of variation for each Treatment group
-for (index in 1:length(treatment_fpkm_list))  {
+for (comparison in comparisons) {
+  
+  # Create data frame with coefficients of variation for each Treatment group
+  for (index in 1:length(treatment_fpkm_list))  {
     
-  # Set treatment column name
-  treatment_col <- paste("Treatment", index, "_", "FPKM_Coeff_of_Var", sep = "")
-  
-  # Checks is data frame exists
-  if (exists("treatment_fpkm_CoV_df")) {
+    if (comparison == "all") {
+    # Set treatment column name
+    treatment_col <- paste("Treatment", index, "_", "FPKM_Coeff_of_Var", sep = "")
     
-    # Add new column with coefficients of variation for each subsequent TreatmentN
-    treatment_fpkm_CoV_df$column <- rowcvs(treatment_fpkm_list[[index]], unbiased = TRUE)
-  }
-  
-  else {
-    # Creates initial data frame with coefficients of variation for FPKM in Treatment 1
-    treatment_fpkm_CoV_df <- as.data.frame(rowcvs(treatment_fpkm_list[[index]], unbiased = TRUE))
-  }
-  
+      # Checks is data frame exists
+      if (exists("treatment_fpkm_CoV_df")) {
+      
+      # Add new column with coefficients of variation for each subsequent TreatmentN
+      treatment_fpkm_CoV_df$column <- rowcvs(treatment_fpkm_list[[index]], unbiased = TRUE)
+      }
+      else {
+      # Creates initial data frame with coefficients of variation for FPKM in Treatment 1
+      treatment_fpkm_CoV_df <- as.data.frame(rowcvs(treatment_fpkm_list[[index]], unbiased = TRUE))
+      }
+    
     # Renames columns
     names(treatment_fpkm_CoV_df)[index] <- treatment_col
+      
+    }
+    
+    # Treatments 2&4 (females)
+    else if (comparison == "f_v_m" && index == "2" || index == "4") {
+      
+    }
+    # Treatments 1&3 (males)
+    else if (comparison == "f_v_m" && index == "1" || index == "3") {
+      
+    }
+    # Treatments 1&2 (control)
+    else if (comparison == "c_v_e" && index = "1" || index == "2") {
+      
+    }
+    # Treatments 3&4 (exposed)
+    else if (comparison = "c_v_e" && index = "3" || index == "4"){
+      
+    }
+    # Treatments (females control)
+    else if (comparison == "fc_v_fe" && index == "2") {
+      
+    }
+    # Treatments 4 (female exposed)
+    else if (comparison == "fc_v_fe" && index == "4") {
+      
+    }
+    # Treatments 1 (males control)
+    else if (comparison == "mc_v_me") {
+      
+    }
+    # Treatments 3 ( males exposed)
+    else if (comparison == "mc_v_me") {
+      
+    }
+    
+  }
+  
 }
+
 
 treatment_fpkm_CoV_df <- treatment_fpkm_CoV_df %>% 
   rownames_to_column(var = "t_id")

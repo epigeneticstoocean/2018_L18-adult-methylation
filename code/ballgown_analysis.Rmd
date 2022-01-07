@@ -718,7 +718,7 @@ exposed females = 4
 treatments <- c(1:4)
 
 # Vector of comparisons
-comparisons <- c("all", "f_v_m", "c_v_e", "fc_v_fe", "mc_v_me")
+comparisons <- c("all", "f_v_m", "c_v_e")
 
 # Declare list
 treatment_fpkm_list <- list()

@@ -749,7 +749,7 @@ for (comparison in comparisons) {
       # Set treatment column name
       treatment_col <- paste("Treatment", index, "_", "FPKM_Coeff_of_Var", sep = "")
     
-      # Checks is data frame exists
+      # Checks if data frame exists
       if (exists("treatment_fpkm_CoV_df")) {
       
         # Add new column with coefficients of variation for each subsequent TreatmentN
@@ -764,8 +764,12 @@ for (comparison in comparisons) {
     
     # Treatments 2&4 (females)
     if (comparison == "f_v_m" & (index == "2" || index == "4")) {
+      
+      # If matrix doesn't exist, create it
       if (!exists("females_matrix")) {
         females_matrix <- treatment_fpkm_list[[index]]
+        
+        # If matrix does exist, append column to matrix
       } else
           females_matrix <- cbind(treatment_fpkm_list[[index]])
       
@@ -782,14 +786,18 @@ for (comparison in comparisons) {
     
     } # Treatments 1&3 (males)
       else if (comparison == "f_v_m" & (index == "1" || index == "3")) {
+        
+        # If matrix doesn't exist, create it
         if (!exists("males_matrix")) {
           males_matrix <- treatment_fpkm_list[[index]]
-        }
-        else
+          
+          # If matrix does exist, append column to matrix
+        } else
           males_matrix <- cbind(treatment_fpkm_list[[index]])
       
-        # Checks is data frame exists
+        # Checks if data frame exists
         if (exists("female.vs.male_fpkm_CoV_df")) {
+          
           # Add new column with coefficients of variation for each subsequent TreatmentN
           female.vs.male_fpkm_CoV_df$column <- rowcvs(males_matrix, unbiased = TRUE)
         } else
@@ -799,9 +807,12 @@ for (comparison in comparisons) {
       
     } # Treatments 1&2 (control)
       else if (comparison == "c_v_e" & (index == "1" || index == "2")) {
-      
+        
+        # If matrix doesn't exist, create it
         if (!exists("controls_matrix")) {
           controls_matrix <- treatment_fpkm_list[[index]]
+          
+          # If matrix does exist, append column to matrix
         } else
             controls_matrix <- cbind(treatment_fpkm_list[[index]])
       
@@ -816,13 +827,16 @@ for (comparison in comparisons) {
       
     } # Treatments 3&4 (exposed)
       else if (comparison == "c_v_e" & (index == "3" || index == "4")) {
-      
+        
+        # If matrix doesn't exist, create it
         if (!exists("exposed_matrix")) {
           exposed_matrix <- treatment_fpkm_list[[index]]
+          
+          # If matrix does exist, append column to matrix
         } else
             exposed_matrix <- cbind(treatment_fpkm_list[[index]])
       
-        # Checks is data frame exists
+        # Checks if data frame exists
         if (exists("control.vs.exposed_fpkm_CoV_df")) {
           
           # Add new column with coefficients of variation for each subsequent TreatmentN

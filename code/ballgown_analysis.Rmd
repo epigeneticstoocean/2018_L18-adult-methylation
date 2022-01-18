@@ -727,9 +727,6 @@ treatment_fpkm_list <- list()
 # Prevent problem of re-running and accidentally appending more data to existing data frame below.
 rm(treatment_fpkm_CoV_df, control.vs.exposed_fpkm_CoV_df, female.vs.male_fpkm_CoV_df)
 
-# Output dataframe names
-fpkm_dataframes <- c("control.vs.exposed_fpkm_CoV_df", "female.vs.male_fpkm_CoV_df", "treatment_fpkm_CoV_df")
-
 # Create list of FPKMs by treatment.
 # Ordered in the list as listed above for the "TreatmentN" column explanation.
 for (treatment in treatments) {
@@ -854,18 +851,34 @@ names(female.vs.male_fpkm_CoV_df)[2] <- paste("females", "_", "FPKM_Coeff_of_Var
 names(control.vs.exposed_fpkm_CoV_df)[1] <- paste("controls", "_", "FPKM_Coeff_of_Var", sep = "")
 names(control.vs.exposed_fpkm_CoV_df)[2] <- paste("exposed", "_", "FPKM_Coeff_of_Var", sep = "")
 
+# Create transcript ID column
+control.vs.exposed_fpkm_CoV_df <- control.vs.exposed_fpkm_CoV_df %>% 
+  rownames_to_column(var = "t_id")
+
+female.vs.male_fpkm_CoV_df <- female.vs.male_fpkm_CoV_df %>% 
+  rownames_to_column(var = "t_id")
 
 treatment_fpkm_CoV_df <- treatment_fpkm_CoV_df %>% 
   rownames_to_column(var = "t_id")
 
 # Check data frame
+head(control.vs.exposed_fpkm_CoV_df)
+head(female.vs.male_fpkm_CoV_df)
 head(treatment_fpkm_CoV_df)
 
-# Write data frames to CSV.
-for (dataframe in fpkm_dataframes) {
-  write.csv(dataframe,
-            file = paste0("../analyses/", dataframe, ".csv"),
-            row.names = FALSE,
-            quote = FALSE)
-}
+# Write data frames to CSVs
+write.csv(control.vs.exposed_fpkm_CoV_df,
+          file = "../analyses/control.vs.exposed_fpkm_CoV.csv",
+          row.names = FALSE,
+          quote = FALSE)
+
+write.csv(female.vs.male_fpkm_CoV_df,
+          file = "../analyses/female.vs.male_fpkm_CoV.csv",
+          row.names = FALSE,
+          quote = FALSE)
+
+write.csv(treatment_fpkm_CoV_df,
+          file = "../analyses/treatment_fpkm_CoV.csv",
+          row.names = FALSE,
+          quote = FALSE)
 ```

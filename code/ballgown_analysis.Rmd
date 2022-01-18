@@ -723,6 +723,13 @@ comparisons <- c("all", "f_v_m", "c_v_e")
 # Declare list
 treatment_fpkm_list <- list()
 
+# Remove data frame if it exists.
+# Prevent problem of re-running and accidentally appending more data to existing data frame below.
+rm(treatment_fpkm_CoV_df, control.vs.exposed_fpkm_CoV_df, female.vs.male_fpkm_CoV_df)
+
+# Output dataframe names
+fpkm_dataframes <- c("control.vs.exposed_fpkm_CoV_df", "female.vs.male_fpkm_CoV_df", "treatment_fpkm_CoV_df")
+
 # Create list of FPKMs by treatment.
 # Ordered in the list as listed above for the "TreatmentN" column explanation.
 for (treatment in treatments) {
@@ -733,13 +740,6 @@ for (treatment in treatments) {
   # Extract transcript FPKMs and add to list
   treatment_fpkm_list[[treatment]] <- texpr(bg_name) 
 }
-
-
-
-# Remove data frame if it exists.
-# Prevent problem of re-running and appending more data to existing data frame below.
-rm(treatment_fpkm_CoV_df, control.vs.exposed_fpkm_CoV_df, female.vs.male_fpkm_CoV_df)
-
 
 for (comparison in comparisons) {
   
@@ -847,7 +847,11 @@ treatment_fpkm_CoV_df <- treatment_fpkm_CoV_df %>%
 # Check data frame
 head(treatment_fpkm_CoV_df)
 
-# Write data frame to CSV.
-#write.csv(treatment_fpkm_CoV_df, "../analyses/treatment_fpkm_CoV_df.csv", row.names = FALSE, quote = FALSE)
-
+# Write data frames to CSV.
+for (dataframe in fpkm_dataframes) {
+  write.csv(dataframe,
+            file = paste0("../analyses/", dataframe, ".csv"),
+            row.names = FALSE,
+            quote = FALSE)
+}
 ```

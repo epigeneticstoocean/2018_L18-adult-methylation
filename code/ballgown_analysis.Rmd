@@ -882,3 +882,27 @@ write.csv(treatment_fpkm_CoV_df,
           row.names = FALSE,
           quote = FALSE)
 ```
+
+```{r gene-fpkm-data-formatting-for-machine-learning}
+# Flips gene names to be columns, while FPKM values are placed in rows
+whole_gx_table_t <- as.data.frame(t(whole_gx_table))
+
+# Put rownames into column for further manipulation
+whole_gx_table_t_rownames <- rownames_to_column(whole_gx_table_t, "library")
+
+# Create new column of old sample IDs
+# Will be used for merging with phenotyp table
+whole_gx_table_t_rownames <- whole_gx_table_t_rownames %>%
+  mutate(OldSample.ID = (str_sub(library, -4, 9))) %>% 
+  relocate(OldSample.ID, .after = library)
+
+# Merge FPKM gene table with phenotype table to get Treatments and Sex for each library
+merged_whole_gx_table_t_rownames <- merge(whole_gx_table_t_rownames_sex, phenotype_table, by = "OldSample.ID") %>% relocate(OldSample.ID, Treatment, TreatmentN, Sex, .after = library)
+
+# Rename FPKM summed column
+rename(merged_whole_gx_table_t_rownames, FPKM_sum = ".")
+
+# Write to file
+write.csv(merged_whole_gx_table_t_rownames, "../analyses/gene_fpkm.csv" ,row.names = FALSE, quote = FALSE)
+
+```

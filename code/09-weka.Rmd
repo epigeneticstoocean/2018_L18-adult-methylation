@@ -3,26 +3,22 @@ title: "09-weka"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
+library(tidyverse)
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+fpkm <- read.csv(file = "../analyses/gene_fpkm.csv")
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+fpkm.treat <- select(fpkm, Treatment, TreatmentN, Sex, gene.LOC111128233, gene.LOC111105393, gene.LOC111116464, gene.LOC111135088, gene.LOC111130500, gene.LOC111127278, gene.LOC111113969, gene.LOC111132481, gene.LOC111105938, gene.LOC111138283, gene.LOC111131835, gene.LOC111129832, gene.LOC111130487, gene.LOC111127862, gene.LOC111110254, gene.LOC111124688, gene.LOC111125297, gene.LOC111116779, gene.LOC111119607, gene.LOC111123744, gene.LOC111124204, gene.LOC111113829, gene.LOC111110051, gene.LOC111104660)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+write.table(fpkm.treat, file = "../analyses/fpkm.treat.csv", sep = ",", row.names = FALSE, quote = FALSE)
+```
+

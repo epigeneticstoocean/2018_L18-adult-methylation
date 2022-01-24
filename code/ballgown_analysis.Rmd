@@ -866,6 +866,8 @@ head(control.vs.exposed_fpkm_CoV_df)
 head(female.vs.male_fpkm_CoV_df)
 head(treatment_fpkm_CoV_df)
 
+
+
 # Write data frames to CSVs
 write.csv(control.vs.exposed_fpkm_CoV_df,
           file = "../analyses/control.vs.exposed_fpkm_CoV.csv",
@@ -897,7 +899,7 @@ whole_gx_table_t_rownames <- whole_gx_table_t_rownames %>%
   relocate(OldSample.ID, .after = library)
 
 # Merge FPKM gene table with phenotype table to get Treatments and Sex for each library
-merged_whole_gx_table_t_rownames <- merge(whole_gx_table_t_rownames_sex, phenotype_table, by = "OldSample.ID") %>% relocate(OldSample.ID, Treatment, TreatmentN, Sex, .after = library)
+merged_whole_gx_table_t_rownames <- merge(whole_gx_table_t_rownames, phenotype_table, by = "OldSample.ID") %>% relocate(OldSample.ID, Treatment, TreatmentN, Sex, .after = library)
 
 # Rename FPKM summed column
 merged_whole_gx_table_t_rownames <- rename(merged_whole_gx_table_t_rownames, FPKM_sum = ".")

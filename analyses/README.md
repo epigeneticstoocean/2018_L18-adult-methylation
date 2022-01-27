@@ -69,4 +69,6 @@ columns 4 (`name`), 5 (`score`), and 6 (`strand`). The `name` column is the tran
 
 - `female.vs.male_fpkm_CoV.csv`: Coefficients of variation of FPKM for combined females and combined males. Column `t_id` = transcript ID.
 
+- `transcript-counts_per-gene-per-sample.csv`: Counts of expressed transcripts per gene per sample.
+
 - `treatment_fpkm_CoV.csv`: Coefficients of variation of FPKM for each treatment,  1 - 4. Column `t_id` = transcript ID.

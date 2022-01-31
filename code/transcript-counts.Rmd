@@ -152,6 +152,9 @@ head(whole_tx_table)
 ## Count transcripts for each gene for each sample.
 ## As transcript is counted if it has an FPKM value > 0.
 ```{r count-transcripts-per-gene-per-sample}
+# Rename gene_names listed as a "."
+whole_tx_table <- whole_tx_table %>% mutate(gene_name = ifelse(gene_name == ".", t_name, gene_name))
+
 # Create table of transcript counts per gene per sample
 transcript_counts <- whole_tx_table %>%
 select(starts_with(c("gene_name", "FPKM"))) %>%

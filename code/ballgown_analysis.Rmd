@@ -224,6 +224,10 @@ structure(bg)$trans
 ```{r}
 # Expression data
 whole_tx_table <-  texpr(bg, 'all')
+
+# Rename gene_names listed as a "."
+whole_tx_table <- whole_tx_table %>% mutate(gene_name = ifelse(gene_name == ".", t_name, gene_name))
+
 head(whole_tx_table)
 
 gene_table <- whole_tx_table %>% select(!t_name)

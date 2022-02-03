@@ -729,7 +729,7 @@ treatment_fpkm_list <- list()
 
 # Remove data frame if it exists.
 # Prevent problem of re-running and accidentally appending more data to existing data frame below.
-rm(treatment_fpkm_CoV_df, control.vs.exposed_fpkm_CoV_df, female.vs.male_fpkm_CoV_df)
+rm(transcripts_treatment_fpkm_CoV_df, transcripts_control.vs.exposed_fpkm_CoV_df, transcripts_female.vs.male_fpkm_CoV_df)
 
 # Create list of FPKMs by treatment.
 # Ordered in the list as listed above for the "TreatmentN" column explanation.
@@ -751,16 +751,16 @@ for (comparison in comparisons) {
       treatment_col <- paste("Treatment", index, "_", "FPKM_Coeff_of_Var", sep = "")
     
       # Checks if data frame exists
-      if (exists("treatment_fpkm_CoV_df")) {
+      if (exists("transcripts_treatment_fpkm_CoV_df")) {
       
         # Add new column with coefficients of variation for each subsequent TreatmentN
-        treatment_fpkm_CoV_df$column <- rowcvs(treatment_fpkm_list[[index]], unbiased = TRUE)
+        transcripts_treatment_fpkm_CoV_df$column <- rowcvs(treatment_fpkm_list[[index]], unbiased = TRUE)
       } else
           # Creates initial data frame with coefficients of variation for FPKM in Treatment 1
-          treatment_fpkm_CoV_df <- as.data.frame(rowcvs(treatment_fpkm_list[[index]], unbiased = TRUE))
+          transcripts_treatment_fpkm_CoV_df <- as.data.frame(rowcvs(treatment_fpkm_list[[index]], unbiased = TRUE))
     
       # Renames columns
-      names(treatment_fpkm_CoV_df)[index] <- treatment_col
+      names(transcripts_treatment_fpkm_CoV_df)[index] <- treatment_col
     }
     
     # Treatments 2&4 (females)
@@ -776,13 +776,13 @@ for (comparison in comparisons) {
       
       
       # Checks is data frame exists
-      if (exists("female.vs.male_fpkm_CoV_df")) {
+      if (exists("transcripts_female.vs.male_fpkm_CoV_df")) {
       
         # Add new column with coefficients of variation for each subsequent TreatmentN
-        female.vs.male_fpkm_CoV_df$column <- rowcvs(females_matrix, unbiased = TRUE)
+        transcripts_female.vs.male_fpkm_CoV_df$column <- rowcvs(females_matrix, unbiased = TRUE)
       } else
           # Creates initial data frame with coefficients of variation for FPKM in Treatment 1
-          female.vs.male_fpkm_CoV_df <- as.data.frame(rowcvs(females_matrix, unbiased = TRUE))
+          transcripts_female.vs.male_fpkm_CoV_df <- as.data.frame(rowcvs(females_matrix, unbiased = TRUE))
       
     
     } # Treatments 1&3 (males)
@@ -797,13 +797,13 @@ for (comparison in comparisons) {
           males_matrix <- cbind(treatment_fpkm_list[[index]])
       
         # Checks if data frame exists
-        if (exists("female.vs.male_fpkm_CoV_df")) {
+        if (exists("transcripts_female.vs.male_fpkm_CoV_df")) {
           
           # Add new column with coefficients of variation for each subsequent TreatmentN
-          female.vs.male_fpkm_CoV_df$column <- rowcvs(males_matrix, unbiased = TRUE)
+          transcripts_female.vs.male_fpkm_CoV_df$column <- rowcvs(males_matrix, unbiased = TRUE)
         } else
             # Creates initial data frame with coefficients of variation for FPKM in Treatment 1
-            female.vs.male_fpkm_CoV_df <- as.data.frame(rowcvs(males_matrix, unbiased = TRUE))
+            transcripts_female.vs.male_fpkm_CoV_df <- as.data.frame(rowcvs(males_matrix, unbiased = TRUE))
 
       
     } # Treatments 1&2 (control)
@@ -818,13 +818,13 @@ for (comparison in comparisons) {
             controls_matrix <- cbind(treatment_fpkm_list[[index]])
       
         # Checks is data frame exists
-        if (exists("control.vs.exposed_fpkm_CoV_df")) {
+        if (exists("transcripts_control.vs.exposed_fpkm_CoV_df")) {
       
           # Add new column with coefficients of variation for each subsequent TreatmentN
-          control.vs.exposed_fpkm_CoV_df$column <- rowcvs(controls_matrix, unbiased = TRUE)
+          transcripts_control.vs.exposed_fpkm_CoV_df$column <- rowcvs(controls_matrix, unbiased = TRUE)
         } else
             # Creates initial data frame with coefficients of variation for FPKM in Treatment 1
-            control.vs.exposed_fpkm_CoV_df <- as.data.frame(rowcvs(controls_matrix, unbiased = TRUE))
+            transcripts_control.vs.exposed_fpkm_CoV_df <- as.data.frame(rowcvs(controls_matrix, unbiased = TRUE))
       
     } # Treatments 3&4 (exposed)
       else if (comparison == "c_v_e" & (index == "3" || index == "4")) {
@@ -838,52 +838,52 @@ for (comparison in comparisons) {
             exposed_matrix <- cbind(treatment_fpkm_list[[index]])
       
         # Checks if data frame exists
-        if (exists("control.vs.exposed_fpkm_CoV_df")) {
+        if (exists("transcripts_control.vs.exposed_fpkm_CoV_df")) {
           
           # Add new column with coefficients of variation for each subsequent TreatmentN
-          control.vs.exposed_fpkm_CoV_df$column <- rowcvs(exposed_matrix, unbiased = TRUE)
+          transcripts_control.vs.exposed_fpkm_CoV_df$column <- rowcvs(exposed_matrix, unbiased = TRUE)
         } else
             # Creates initial data frame with coefficients of variation for FPKM in Treatment 1
-            control.vs.exposed_fpkm_CoV_df <- as.data.frame(rowcvs(exposed_matrix, unbiased = TRUE))
+            transcripts_control.vs.exposed_fpkm_CoV_df <- as.data.frame(rowcvs(exposed_matrix, unbiased = TRUE))
     }
   }
 }
 
 # Rename columns
-names(female.vs.male_fpkm_CoV_df)[1] <- paste("males", "_", "FPKM_Coeff_of_Var", sep = "")
-names(female.vs.male_fpkm_CoV_df)[2] <- paste("females", "_", "FPKM_Coeff_of_Var", sep = "")
-names(control.vs.exposed_fpkm_CoV_df)[1] <- paste("controls", "_", "FPKM_Coeff_of_Var", sep = "")
-names(control.vs.exposed_fpkm_CoV_df)[2] <- paste("exposed", "_", "FPKM_Coeff_of_Var", sep = "")
+names(transcripts_female.vs.male_fpkm_CoV_df)[1] <- paste("males", "_", "FPKM_Coeff_of_Var", sep = "")
+names(transcripts_female.vs.male_fpkm_CoV_df)[2] <- paste("females", "_", "FPKM_Coeff_of_Var", sep = "")
+names(transcripts_control.vs.exposed_fpkm_CoV_df)[1] <- paste("controls", "_", "FPKM_Coeff_of_Var", sep = "")
+names(transcripts_control.vs.exposed_fpkm_CoV_df)[2] <- paste("exposed", "_", "FPKM_Coeff_of_Var", sep = "")
 
 # Create transcript ID column
-control.vs.exposed_fpkm_CoV_df <- control.vs.exposed_fpkm_CoV_df %>% 
+transcripts_control.vs.exposed_fpkm_CoV_df <- transcripts_control.vs.exposed_fpkm_CoV_df %>% 
   rownames_to_column(var = "t_id")
 
-female.vs.male_fpkm_CoV_df <- female.vs.male_fpkm_CoV_df %>% 
+transcripts_female.vs.male_fpkm_CoV_df <- transcripts_female.vs.male_fpkm_CoV_df %>% 
   rownames_to_column(var = "t_id")
 
-treatment_fpkm_CoV_df <- treatment_fpkm_CoV_df %>% 
+transcripts_treatment_fpkm_CoV_df <- transcripts_treatment_fpkm_CoV_df %>% 
   rownames_to_column(var = "t_id")
 
 # Check data frame
-head(control.vs.exposed_fpkm_CoV_df)
-head(female.vs.male_fpkm_CoV_df)
-head(treatment_fpkm_CoV_df)
+head(transcripts_control.vs.exposed_fpkm_CoV_df)
+head(transcripts_female.vs.male_fpkm_CoV_df)
+head(transcripts_treatment_fpkm_CoV_df)
 
 
 
 # Write data frames to CSVs
-write.csv(control.vs.exposed_fpkm_CoV_df,
+write.csv(transcripts_control.vs.exposed_fpkm_CoV_df,
           file = "../analyses/control.vs.exposed_fpkm_CoV.csv",
           row.names = FALSE,
           quote = FALSE)
 
-write.csv(female.vs.male_fpkm_CoV_df,
+write.csv(transcripts_female.vs.male_fpkm_CoV_df,
           file = "../analyses/female.vs.male_fpkm_CoV.csv",
           row.names = FALSE,
           quote = FALSE)
 
-write.csv(treatment_fpkm_CoV_df,
+write.csv(transcripts_treatment_fpkm_CoV_df,
           file = "../analyses/treatment_fpkm_CoV.csv",
           row.names = FALSE,
           quote = FALSE)

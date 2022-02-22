@@ -720,7 +720,7 @@ whole_gx_table_t_rownames <- rownames_to_column(whole_gx_table_t, "library")
 # Create new column of old sample IDs
 # Will be used for merging with phenotyp table
 whole_gx_table_t_rownames <- whole_gx_table_t_rownames %>%
-  mutate(OldSample.ID = (str_sub(library, -4, 9))) %>% 
+  mutate(OldSample.ID = (str_remove(library, "FPKM."))) %>% 
   relocate(OldSample.ID, .after = library)
 
 # Merge FPKM gene table with phenotype table to get Treatments and Sex for each library

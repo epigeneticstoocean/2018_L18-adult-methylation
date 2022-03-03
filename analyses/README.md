@@ -11,7 +11,7 @@ columns 4 (`name`), 5 (`score`), and 6 (`strand`). The `name` column is the tran
 
   - `t_id`: Transcript ID (integer) assigned by `ballgown`.
 
-  - `chr`: Chromosome ID from NCBI [_Crassostrea gigas_ (Pacific oyster)](http://en.wikipedia.org/wiki/Pacific_oyster) genome `GCF_002022765.2_C_virginica-3.0_genomic.fna`.
+  - `chr`: Chromosome ID from NCBI [_Crassostrea virginica_ (Eastern oyster)](https://en.wikipedia.org/wiki/Eastern_oyster) genome `GCF_002022765.2_C_virginica-3.0_genomic.fna`.
 
   - `strand`: Originating DNA strand (+ or -).
 
@@ -47,7 +47,7 @@ columns 4 (`name`), 5 (`score`), and 6 (`strand`). The `name` column is the tran
 
   - `t_id`: Transcript ID (integer) assigned by `ballgown`.
 
-  - `chr`: Chromosome ID from NCBI [_Crassostrea gigas_ (Pacific oyster)](http://en.wikipedia.org/wiki/Pacific_oyster) genome `GCF_002022765.2_C_virginica-3.0_genomic.fna`.
+  - `chr`: Chromosome ID from NCBI [_Crassostrea virginica_ (Eastern oyster)](https://en.wikipedia.org/wiki/Eastern_oyster) genome `GCF_002022765.2_C_virginica-3.0_genomic.fna`.
 
   - `strand`: Originating DNA strand (+ or -).
 

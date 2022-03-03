@@ -62,4 +62,4 @@
 
 - `whole_tx_table.csv`: Ballgown table of all transcript data for all samples.
 
-- `zr4059_multiqc_report_with_alignment.html`: MultiQC report for RNAseq QC and alignment to [_Crassostrea virginica_ (Eastern oyster)](https://en.wikipedia.org/wiki/Eastern_oyster) NCBI genome. Open with browser to view interactive report.
+- `zr4059_multiqc_report_with_alignment.html`: MultiQC report for RNAseq QC and alignment to [_Crassostrea virginica_ (Eastern oyster)](https://en.wikipedia.org/wiki/Eastern_oyster) NCBI genome. Open with browser to view interactive report. [ZymoResearch guide to interpreting the report.](https://github.com/Zymo-Research/service-pipeline-documentation/blob/master/docs/how_to_use_RNAseq_report.md)

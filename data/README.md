@@ -28,7 +28,7 @@
 
   - `Parent.ID`: Unique ID of individual parents with the following designations:
 
-    - `[CE][FM]<double>`:
+    - `[CE][FM]<integer>`:
 
       - `[CE]` indicates either `C`ontrol or `E`xposed.
 
@@ -62,4 +62,4 @@
 
 - `whole_tx_table.csv`: Ballgown table of all transcript data for all samples.
 
-- [`zr4059_multiqc_report_with_alignment.html`](https://htmlpreview.github.io/?https://raw.githubusercontent.com/epigeneticstoocean/2018_L18-adult-methylation/main/data/zr4059_multiqc_report_with_alignment.html): MultiQC report for RNAseq QC and alignment to [_Crassostrea virginica_ (Eastern oyster)](https://en.wikipedia.org/wiki/Eastern_oyster) NCBI genome. Filename links to interactive version of the report.
+- `zr4059_multiqc_report_with_alignment.html`: MultiQC report for RNAseq QC and alignment to [_Crassostrea virginica_ (Eastern oyster)](https://en.wikipedia.org/wiki/Eastern_oyster) NCBI genome. Open with browser to view interactive report.

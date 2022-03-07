@@ -53,11 +53,11 @@ qvalue <- 0.05
 
 Notebooks detailing their creation:
 
-- [FastQ trimming](https://robertslab.github.io/sams-notebook/2021/07/14/Trimming-C.virginica-Gonad-RNAseq-with-FastP-on-Mox.html)
+- [FastQ trimming](https://robertslab.github.io/sams-notebook/2022/02/24/Trimming-Additional-20bp-from-C.virginica-Gonad-RNAseq-with-fastp-on-Mox.html)
 
 - [Genome indexing, and exon/splice sites with HISAT2](https://robertslab.github.io/sams-notebook/2021/07/20/Genome-Annotations-Splice-Site-and-Exon-Extractions-for-C.virginica-GCF_002022765.2-Genome-Using-Hisat2-on-Mox.html)
 
-- [Mapping and identificaion of isoforms with StingTie](https://robertslab.github.io/sams-notebook/2021/07/20/RNAseq-Alignments-C.virginica-Gonad-Data-to-GCF_002022765.2-Genome-Using-StringTie-on-Mox.html)
+- [Mapping and identificaion of isoforms with StingTie](https://robertslab.github.io/sams-notebook/2022/02/25/Transcript-Identification-and-Alignments-C.virginica-RNAseq-with-NCBI-Genome-GCF_002022765.2-Using-Hisat2-and-Stringtie-on-Mox.html)
 
 ```{bash}
 # Download Ballgown input files and directory structure
@@ -71,7 +71,7 @@ wget \
 --no-parent \
 --quiet \
 --reject "input_fastqs_checksums.md5" \
---accept "*.ctab,*checksums.md5" https://gannet.fish.washington.edu/Atumefaciens/20210726_cvir_stringtie_GCF_002022765.2_isoforms/
+--accept "*.ctab,*checksums.md5" https://gannet.fish.washington.edu/Atumefaciens/20220225_cvir_stringtie_GCF_002022765.2_isoforms/
 ```
 
 ## Verify checksums
@@ -668,7 +668,7 @@ count_filtered_stat_results <-  nrow(filtered_stat_results)
 cat("Number of male OA DETs with p-values and q-values <= ", pvalue, ":", count_filtered_stat_results)
 ```
 
-## Identify differentially expressed transcripts (DEGs) between Treatment within females.
+## Identify differentially expressed genes (DEGs) between Treatment within females.
 ## Returns FoldChange, too (getFC = TRUE)
 ```{r DEGs-female-OA}
 # Load phenotype info into Ballgown
@@ -688,7 +688,7 @@ count_filtered_stat_results <-  nrow(filtered_stat_results)
 cat("Number of female OA DEGs with p-values and q-values <= ", pvalue, ":", count_filtered_stat_results)
 ```
 
-## Identify differentially expressed transcripts (DETs) between Treatment within males
+## Identify differentially expressed genes (DETs) between Treatment within males
 ## Returns FoldChange, too (getFC = TRUE)
 ```{r DEGs-male-OA}
 # Load phenotype info into Ballgown

@@ -27,6 +27,7 @@ REQUIRES the following R libraries:
 ```{r}
 library("ballgown")
 library("tidyverse")
+library("Rfast")
 ```
 
 ## Download Ballgown input files.
@@ -179,9 +180,9 @@ comparisons <- c("all", "f_v_m", "c_v_e")
 ## Moves the gene ids from rownames to a column in a data frame
 ballgown_genes_df <- 
   as.data.frame(gexpr(bg)) %>%
-  rownames_to_column(var = "gened_id")
+  rownames_to_column(var = "gene_id")
 ## Extracts gene ids
-genes <- whole_gx_table_df$gene_id
+genes <- ballgown_genes_df$gene_id
 
 # Declare lists
 transcripts_treatment_fpkm_list <- list()

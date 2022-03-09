@@ -230,6 +230,19 @@ whole_tx_table <- whole_tx_table %>% mutate(gene_name = ifelse(gene_name == ".",
 
 head(whole_tx_table)
 
+# FPKM values for all transcripts
+# Converts output to data frame
+transcript_fpkm <- as.data.frame(texpr(bg, 'FPKM'))
+
+# Put rownames into column for further manipulation
+transcript_fpkm <- rownames_to_column(transcript_fpkm, "t_id")
+head(transcript_fpkm)
+write.csv(transcript_fpkm,
+          file = "../data/fpkm-all_transcripts.csv",
+          quote = FALSE,
+          row.names = FALSE)
+
+# Gene table
 gene_table <- whole_tx_table %>% select(!t_name)
 head(gene_table)
 

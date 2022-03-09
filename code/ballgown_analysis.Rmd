@@ -232,6 +232,12 @@ head(whole_tx_table)
 
 gene_table <- whole_tx_table %>% select(!t_name)
 head(gene_table)
+
+# Write whole_tx_table to file
+write.csv(whole_tx_table,
+          file ="../data/whole_tx_table.csv",
+          quote = FALSE,
+          row.names = FALSE)
 ```
 
 ## Load all gene expression data

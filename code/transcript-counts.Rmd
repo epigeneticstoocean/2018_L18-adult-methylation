@@ -157,14 +157,28 @@ whole_tx_table <- whole_tx_table %>% mutate(gene_name = ifelse(gene_name == ".",
 
 # Create table of transcript counts per gene per sample
 transcript_counts <- whole_tx_table %>%
-select(starts_with(c("gene_name", "FPKM"))) %>%
-group_by(gene_name) %>%
-summarise((across(everything(), ~sum(. > 0))))
+  select(starts_with(c("gene_name", "FPKM"))) %>%
+  group_by(gene_name) %>%
+  summarise((across(everything(), ~sum(. > 0))))
 
 head(transcript_counts)
 
 # Rename columns
 names(transcript_counts) <- gsub(x = names(transcript_counts), pattern = "FPKM", replacement = "transcript_counts")
+
+head(transcript_counts)
+
+# Perform calculations
+transcript_counts <- transcript_counts %>%
+  rowwise() %>% 
+  mutate(
+    sum_transcript_counts = sum(c_across(where(is.numeric))),
+    median_transcript_counts = median(c_across(where(is.numeric))),
+    mean_transcript_counts = mean(c_across(where(is.numeric))),
+    max_transcript_counts = max(c_across(where(is.numeric))),
+    min_transcript_counts = min(c_across(where(is.numeric))),
+    std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+  )
 
 head(transcript_counts)
 

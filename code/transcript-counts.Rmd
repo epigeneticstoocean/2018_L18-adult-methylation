@@ -180,6 +180,32 @@ transcript_counts <- transcript_counts %>%
     std_dev_transcript_counts = sd(c_across(where(is.numeric)))
   )
 
+# Male stats
+transcript_counts_males <- transcript_counts %>%
+  rowwise() %>% 
+  select(ends_with('M')) %>% 
+  mutate(
+    male_sum_transcript_counts = sum(c_across(where(is.numeric))),
+    male_median_transcript_counts = median(c_across(where(is.numeric))),
+    male_mean_transcript_counts = mean(c_across(where(is.numeric))),
+    male_max_transcript_counts = max(c_across(where(is.numeric))),
+    male_min_transcript_counts = min(c_across(where(is.numeric))),
+    male_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+  )
+
+# Female stats
+transcript_counts_females <- transcript_counts %>%
+  rowwise() %>% 
+  select(ends_with('F')) %>% 
+  mutate(
+    female_sum_transcript_counts = sum(c_across(where(is.numeric))),
+    female_median_transcript_counts = median(c_across(where(is.numeric))),
+    female_mean_transcript_counts = mean(c_across(where(is.numeric))),
+    female_max_transcript_counts = max(c_across(where(is.numeric))),
+    female_min_transcript_counts = min(c_across(where(is.numeric))),
+    female_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+  )
+
 head(transcript_counts)
 
 # Write to CSV

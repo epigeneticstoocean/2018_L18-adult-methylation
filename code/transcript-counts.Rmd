@@ -217,6 +217,58 @@ transcript_counts_females <- transcript_counts %>%
     female_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
   )
 
+# Controls stats
+transcript_counts_controls <- transcript_counts %>%
+  rowwise() %>% 
+  select(ends_with(controls)) %>% 
+  mutate(
+    controls_sum_transcript_counts = sum(c_across(where(is.numeric))),
+    controls_median_transcript_counts = median(c_across(where(is.numeric))),
+    controls_mean_transcript_counts = mean(c_across(where(is.numeric))),
+    controls_max_transcript_counts = max(c_across(where(is.numeric))),
+    controls_min_transcript_counts = min(c_across(where(is.numeric))),
+    controls_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+  )
+
+# Exposed stats
+transcript_counts_exposed <- transcript_counts %>%
+  rowwise() %>% 
+  select(ends_with(exposed)) %>% 
+  mutate(
+    exposed_sum_transcript_counts = sum(c_across(where(is.numeric))),
+    exposed_median_transcript_counts = median(c_across(where(is.numeric))),
+    exposed_mean_transcript_counts = mean(c_across(where(is.numeric))),
+    exposed_max_transcript_counts = max(c_across(where(is.numeric))),
+    exposed_min_transcript_counts = min(c_across(where(is.numeric))),
+    exposed_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+  )
+
+# Controls females stats
+transcript_counts_controls_females <- transcript_counts %>%
+  rowwise() %>% 
+  select(ends_with(controls_females)) %>% 
+  mutate(
+    control_females_sum_transcript_counts = sum(c_across(where(is.numeric))),
+    control_females_median_transcript_counts = median(c_across(where(is.numeric))),
+    control_females_mean_transcript_counts = mean(c_across(where(is.numeric))),
+    control_females_max_transcript_counts = max(c_across(where(is.numeric))),
+    control_females_min_transcript_counts = min(c_across(where(is.numeric))),
+    control_females_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+  )
+
+# Exposed females stats
+transcript_counts_exposed_females <- transcript_counts %>%
+  rowwise() %>% 
+  select(ends_with(exposed_females)) %>% 
+  mutate(
+    exposed_females_sum_transcript_counts = sum(c_across(where(is.numeric))),
+    exposed_females_median_transcript_counts = median(c_across(where(is.numeric))),
+    exposed_females_mean_transcript_counts = mean(c_across(where(is.numeric))),
+    exposed_females_max_transcript_counts = max(c_across(where(is.numeric))),
+    exposed_females_min_transcript_counts = min(c_across(where(is.numeric))),
+    exposed_females_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+  )
+
 head(transcript_counts)
 
 # Write to CSV

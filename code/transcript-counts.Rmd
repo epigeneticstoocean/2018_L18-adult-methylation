@@ -280,7 +280,12 @@ transcript_counts_per_gene_per_sample_exposed_females <- transcript_counts %>%
 list_transcript_counts_dfs <- mget(grep("^(?!list).*", ls(pattern = "transcript_counts_per_gene_per_sample"), value = TRUE, perl = TRUE))
 
 head(transcript_counts)
+```
 
+```{r write-transcript-per-gene-counts-to-files}
+
+# Write data frames to CSVs in ../analyses/dir
+# Uses names of data frames as names of output files.
 sapply(names(list_transcript_counts_dfs),
        function(x) write.csv(list_transcript_counts_dfs[[x]],
                              file = file.path("../analyses/", paste(x, "csv", sep=".")),

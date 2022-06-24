@@ -184,7 +184,7 @@ names(transcript_counts) <- gsub(x = names(transcript_counts), pattern = "FPKM",
 head(transcript_counts)
 
 # Perform calculations
-transcript_counts <- transcript_counts %>%
+transcript_counts_per_gene_per_sample <- transcript_counts %>%
   rowwise() %>% 
   mutate(
     sum_transcript_counts = sum(c_across(where(is.numeric))),
@@ -196,7 +196,7 @@ transcript_counts <- transcript_counts %>%
   )
 
 # Male stats
-transcript_counts_males <- transcript_counts %>%
+transcript_counts_per_gene_per_sample_males <- transcript_counts %>%
   rowwise() %>% 
   select(ends_with('M')) %>% 
   mutate(
@@ -209,7 +209,7 @@ transcript_counts_males <- transcript_counts %>%
   )
 
 # Female stats
-transcript_counts_females <- transcript_counts %>%
+transcript_counts_per_gene_per_sample_females <- transcript_counts %>%
   rowwise() %>% 
   select(ends_with('F')) %>% 
   mutate(
@@ -222,7 +222,7 @@ transcript_counts_females <- transcript_counts %>%
   )
 
 # Controls stats
-transcript_counts_controls <- transcript_counts %>%
+transcript_counts_per_gene_per_sample_controls <- transcript_counts %>%
   rowwise() %>% 
   select(ends_with(controls)) %>% 
   mutate(
@@ -235,7 +235,7 @@ transcript_counts_controls <- transcript_counts %>%
   )
 
 # Exposed stats
-transcript_counts_exposed <- transcript_counts %>%
+transcript_counts_per_gene_per_sample_exposed <- transcript_counts %>%
   rowwise() %>% 
   select(ends_with(exposed)) %>% 
   mutate(
@@ -248,7 +248,7 @@ transcript_counts_exposed <- transcript_counts %>%
   )
 
 # Controls females stats
-transcript_counts_controls_females <- transcript_counts %>%
+transcript_counts_per_gene_per_sample_controls_females <- transcript_counts %>%
   rowwise() %>% 
   select(ends_with(controls_females)) %>% 
   mutate(
@@ -261,7 +261,7 @@ transcript_counts_controls_females <- transcript_counts %>%
   )
 
 # Exposed females stats
-transcript_counts_exposed_females <- transcript_counts %>%
+transcript_counts_per_gene_per_sample_exposed_females <- transcript_counts %>%
   rowwise() %>% 
   select(ends_with(exposed_females)) %>% 
   mutate(
@@ -280,9 +280,6 @@ transcript_counts_exposed_females <- transcript_counts %>%
 list_transcript_counts_dfs <- mget(grep("^(?!list).*", ls(pattern = "transcript_counts"), value = TRUE, perl = TRUE))
 
 head(transcript_counts)
-
-# Write to CSV
-write.csv(transcript_counts, file = "../analyses/transcript-counts_per-gene-per-sample.csv", row.names = FALSE, quote = FALSE)
 
 sapply(names(list_transcript_counts_dfs),
        function(x) write.csv(list_transcript_counts_dfs[[x]],

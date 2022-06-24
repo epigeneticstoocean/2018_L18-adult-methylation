@@ -286,7 +286,7 @@ write.csv(transcript_counts, file = "../analyses/transcript-counts_per-gene-per-
 
 sapply(names(list_transcript_counts_dfs),
        function(x) write.csv(list_transcript_counts_dfs[[x]],
-                             file = paste(x, "csv", sep="."),
+                             file = file.path("../analyses/", paste(x, "csv", sep=".")),
                              quote = FALSE,
                              row.names = FALSE)
        )

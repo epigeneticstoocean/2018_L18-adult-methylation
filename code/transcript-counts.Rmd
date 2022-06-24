@@ -277,10 +277,17 @@ transcript_counts_exposed_females <- transcript_counts %>%
 # Wraps ls() with grep to allow for needed perl regex (the  "^(?!list).*" aspect) because
 # ls() doesn't support perl regex
 # Regex excludes any results beginning with the word "list"
-list_transcript_counts_dfs <- grep("^(?!list).*", ls(pattern = "transcript_counts"), value = TRUE, perl = TRUE)
+list_transcript_counts_dfs <- mget(grep("^(?!list).*", ls(pattern = "transcript_counts"), value = TRUE, perl = TRUE))
 
 head(transcript_counts)
 
 # Write to CSV
 write.csv(transcript_counts, file = "../analyses/transcript-counts_per-gene-per-sample.csv", row.names = FALSE, quote = FALSE)
+
+sapply(names(list_transcript_counts_dfs),
+       function(x) write.csv(list_transcript_counts_dfs[[x]],
+                             file = paste(x, "csv", sep="."),
+                             quote = FALSE,
+                             row.names = FALSE)
+       )
 ```

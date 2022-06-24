@@ -277,7 +277,7 @@ transcript_counts_per_gene_per_sample_exposed_females <- transcript_counts %>%
 # Wraps ls() with grep to allow for needed perl regex (the  "^(?!list).*" aspect) because
 # ls() doesn't support perl regex
 # Regex excludes any results beginning with the word "list"
-list_transcript_counts_dfs <- mget(grep("^(?!list).*", ls(pattern = "transcript_counts"), value = TRUE, perl = TRUE))
+list_transcript_counts_dfs <- mget(grep("^(?!list).*", ls(pattern = "transcript_counts_per_gene_per_sample"), value = TRUE, perl = TRUE))
 
 head(transcript_counts)
 

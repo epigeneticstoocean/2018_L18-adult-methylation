@@ -273,6 +273,32 @@ transcript_counts_per_gene_per_sample_exposed_females <- transcript_counts %>%
     exposed_females_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
   )
 
+# Controls males stats
+transcript_counts_per_gene_per_sample_controls_males <- transcript_counts %>%
+  rowwise() %>% 
+  select("gene_name", ends_with(controls_males)) %>% 
+  mutate(
+    control_males_sum_transcript_counts = sum(c_across(where(is.numeric))),
+    control_males_median_transcript_counts = median(c_across(where(is.numeric))),
+    control_males_mean_transcript_counts = mean(c_across(where(is.numeric))),
+    control_males_max_transcript_counts = max(c_across(where(is.numeric))),
+    control_males_min_transcript_counts = min(c_across(where(is.numeric))),
+    control_males_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+  )
+
+# Exposed males stats
+transcript_counts_per_gene_per_sample_exposed_males <- transcript_counts %>%
+  rowwise() %>% 
+  select("gene_name", ends_with(exposed_males)) %>% 
+  mutate(
+    exposed_males_sum_transcript_counts = sum(c_across(where(is.numeric))),
+    exposed_males_median_transcript_counts = median(c_across(where(is.numeric))),
+    exposed_males_mean_transcript_counts = mean(c_across(where(is.numeric))),
+    exposed_males_max_transcript_counts = max(c_across(where(is.numeric))),
+    exposed_males_min_transcript_counts = min(c_across(where(is.numeric))),
+    exposed_males_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+  )
+
 # Add data frames to list
 # Wraps ls() with grep to allow for needed perl regex (the  "^(?!list).*" aspect) because
 # ls() doesn't support perl regex

@@ -72,7 +72,24 @@ columns 4 (`name`), 5 (`score`), and 6 (`strand`). The `name` column is the tran
 - `DET_sex_male_filtered_p-0.05_q-0.05.bed`: BED file of differentially expressed transcripts (DET) up-regulated in ales only, filtered for DET having p-values and q-values <= 0.05. Includes optional
 columns 4 (`name`), 5 (`score`), and 6 (`strand`). The `name` column is the transcript ID assigned by `ballgown`. The `score` column has been assigned an arbitrary value of 0.
 
-- `transcript-counts_per-gene-per-sample.csv`: Counts of expressed transcripts per gene per sample.
+- `transcript_counts_per_gene_per_sample_controls.csv`: Counts of all expressed transcripts per gene in _control_ samples only. Includes the following columns: `gene_names`, `transcript_counts.<SAMPLE>`, `sum`, `median`, `mean`, `max`, `min`, `standard deviation`.
+
+- `transcript_counts_per_gene_per_sample_controls_females.csv`: Counts of all expressed transcripts per gene in _control females_ samples only. Includes the following columns: `gene_names`, `transcript_counts.<SAMPLE>`, `sum`, `median`, `mean`, `max`, `min`, `standard deviation`.
+
+- `transcript_counts_per_gene_per_sample_controls_males.csv`: Counts of all expressed transcripts per gene in _control males_ samples only. Includes the following columns: `gene_names`, `transcript_counts.<SAMPLE>`, `sum`, `median`, `mean`, `max`, `min`, `standard deviation`.
+
+- `transcript_counts_per_gene_per_sample.csv`: Counts of all expressed transcripts per gene in each sample. Includes the following columns: `gene_names`, `transcript_counts.<SAMPLE>`, `sum`, `median`, `mean`, `max`, `min`, `standard deviation`.
+
+- `transcript_counts_per_gene_per_sample_exposed.csv`: Counts of all expressed transcripts per gene in _exposed_ samples only. Includes the following columns: `gene_names`, `transcript_counts.<SAMPLE>`, `sum`, `median`, `mean`, `max`, `min`, `standard deviation`.
+
+- `transcript_counts_per_gene_per_sample_exposed_females.csv`: Counts of all expressed transcripts per gene in _exposed female_ samples only. Includes the following columns: `gene_names`, `transcript_counts.<SAMPLE>`, `sum`, `median`, `mean`, `max`, `min`, `standard deviation`.
+
+- `transcript_counts_per_gene_per_sample_exposed_males.csv`: Counts of all expressed transcripts per gene in _exposed male_ samples only. Includes the following columns: `gene_names`, `transcript_counts.<SAMPLE>`, `sum`, `median`, `mean`, `max`, `min`, `standard deviation`.
+
+- `transcript_counts_per_gene_per_sample_females.csv`: Counts of all expressed transcripts per gene in _females_ samples only. Includes the following columns: `gene_names`, `transcript_counts.<SAMPLE>`, `sum`, `median`, `mean`, `max`, `min`, `standard deviation`.
+
+- `transcript_counts_per_gene_per_sample_males.csv`: Counts of all expressed transcripts per gene in _male_ samples only. Includes the following columns: `gene_names`, `transcript_counts.<SAMPLE>`, `sum`, `median`, `mean`, `max`, `min`, `standard deviation`.
+
 
 - `transcripts_control.vs.exposed_fpkm_CoV_df.csv`: Coefficients of variation of transcript FPKM for combined controls and combined exposed. Column `t_id` = transcript ID.
 

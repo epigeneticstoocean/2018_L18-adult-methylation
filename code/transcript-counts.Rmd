@@ -198,7 +198,7 @@ transcript_counts_per_gene_per_sample <- transcript_counts %>%
 # Male stats
 transcript_counts_per_gene_per_sample_males <- transcript_counts %>%
   rowwise() %>% 
-  select(ends_with('M')) %>% 
+  select("gene_name", ends_with('M')) %>% 
   mutate(
     male_sum_transcript_counts = sum(c_across(where(is.numeric))),
     male_median_transcript_counts = median(c_across(where(is.numeric))),
@@ -211,7 +211,7 @@ transcript_counts_per_gene_per_sample_males <- transcript_counts %>%
 # Female stats
 transcript_counts_per_gene_per_sample_females <- transcript_counts %>%
   rowwise() %>% 
-  select(ends_with('F')) %>% 
+  select("gene_name", ends_with('F')) %>% 
   mutate(
     female_sum_transcript_counts = sum(c_across(where(is.numeric))),
     female_median_transcript_counts = median(c_across(where(is.numeric))),
@@ -224,7 +224,7 @@ transcript_counts_per_gene_per_sample_females <- transcript_counts %>%
 # Controls stats
 transcript_counts_per_gene_per_sample_controls <- transcript_counts %>%
   rowwise() %>% 
-  select(ends_with(controls)) %>% 
+  select("gene_name", ends_with(controls)) %>% 
   mutate(
     controls_sum_transcript_counts = sum(c_across(where(is.numeric))),
     controls_median_transcript_counts = median(c_across(where(is.numeric))),
@@ -237,7 +237,7 @@ transcript_counts_per_gene_per_sample_controls <- transcript_counts %>%
 # Exposed stats
 transcript_counts_per_gene_per_sample_exposed <- transcript_counts %>%
   rowwise() %>% 
-  select(ends_with(exposed)) %>% 
+  select("gene_name", ends_with(exposed)) %>% 
   mutate(
     exposed_sum_transcript_counts = sum(c_across(where(is.numeric))),
     exposed_median_transcript_counts = median(c_across(where(is.numeric))),
@@ -250,7 +250,7 @@ transcript_counts_per_gene_per_sample_exposed <- transcript_counts %>%
 # Controls females stats
 transcript_counts_per_gene_per_sample_controls_females <- transcript_counts %>%
   rowwise() %>% 
-  select(ends_with(controls_females)) %>% 
+  select("gene_name", ends_with(controls_females)) %>% 
   mutate(
     control_females_sum_transcript_counts = sum(c_across(where(is.numeric))),
     control_females_median_transcript_counts = median(c_across(where(is.numeric))),
@@ -263,7 +263,7 @@ transcript_counts_per_gene_per_sample_controls_females <- transcript_counts %>%
 # Exposed females stats
 transcript_counts_per_gene_per_sample_exposed_females <- transcript_counts %>%
   rowwise() %>% 
-  select(ends_with(exposed_females)) %>% 
+  select("gene_name", ends_with(exposed_females)) %>% 
   mutate(
     exposed_females_sum_transcript_counts = sum(c_across(where(is.numeric))),
     exposed_females_median_transcript_counts = median(c_across(where(is.numeric))),

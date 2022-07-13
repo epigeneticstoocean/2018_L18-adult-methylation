@@ -47,8 +47,59 @@ count_calcs <- c("sum_transcript_counts",
                  "mean_transcript_counts",
                  "max_transcript_counts",
                  "min_transcript_counts",
-                 "std_dev_transcript_counts"
+                 "std_dev_transcript_counts",
+                 "male_sum_transcript_counts",
+                 "male_median_transcript_counts" ,
+                 "male_mean_transcript_counts",
+                 "male_max_transcript_counts",
+                 "male_min_transcript_counts",
+                 "male_std_dev_transcript_counts",
+                 "female_sum_transcript_counts",
+                 "female_median_transcript_counts",
+                 "female_mean_transcript_counts",
+                 "female_max_transcript_counts",
+                 "female_min_transcript_counts",
+                 "female_std_dev_transcript_counts",
+                 "controls_sum_transcript_counts",
+                 "controls_median_transcript_counts",
+                 "controls_mean_transcript_counts",
+                 "controls_max_transcript_counts",
+                 "controls_min_transcript_counts",
+                 "controls_std_dev_transcript_counts",
+                 "exposed_sum_transcript_counts",
+                 "exposed_median_transcript_counts",
+                 "exposed_mean_transcript_counts",
+                 "exposed_max_transcript_counts",
+                 "exposed_min_transcript_counts",
+                 "exposed_std_dev_transcript_counts",
+                 "control_females_sum_transcript_counts",
+                 "control_females_median_transcript_counts",
+                 "control_females_mean_transcript_counts",
+                 "control_females_max_transcript_counts",
+                 "control_females_min_transcript_counts",
+                 "control_females_std_dev_transcript_counts",
+                 "exposed_females_sum_transcript_counts",
+                 "exposed_females_median_transcript_counts",
+                 "exposed_females_mean_transcript_counts",
+                 "exposed_females_max_transcript_counts",
+                 "exposed_females_min_transcript_counts",
+                 "exposed_females_std_dev_transcript_counts",
+                 "control_males_sum_transcript_counts",
+                 "control_males_median_transcript_counts",
+                 "control_males_mean_transcript_counts",
+                 "control_males_max_transcript_counts",
+                 "control_males_min_transcript_counts",
+                 "control_males_std_dev_transcript_counts",
+                 "exposed_males_sum_transcript_counts",
+                 "exposed_males_median_transcript_counts",
+                 "exposed_males_mean_transcript_counts",
+                 "exposed_males_max_transcript_counts",
+                 "exposed_males_min_transcript_counts",
+                 "exposed_males_std_dev_transcript_counts"
+                 
 )
+
+
                  
 
 # Initialize list of data frames
@@ -197,12 +248,12 @@ head(transcript_counts)
 transcript_counts_per_gene_per_sample <- transcript_counts %>%
   rowwise() %>% 
   mutate(
-    sum_transcript_counts = sum(c_across(where(is.numeric))),
-    median_transcript_counts = median(c_across(where(is.numeric))),
-    mean_transcript_counts = mean(c_across(where(is.numeric))),
-    max_transcript_counts = max(c_across(where(is.numeric))),
-    min_transcript_counts = min(c_across(where(is.numeric))),
-    std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+    sum_transcript_counts = sum(c_across(where(is.numeric) & -any_of(count_calcs))),
+    median_transcript_counts = median(c_across(where(is.numeric) & -any_of(count_calcs))),
+    mean_transcript_counts = mean(c_across(where(is.numeric) & -any_of(count_calcs))),
+    max_transcript_counts = max(c_across(where(is.numeric) & -any_of(count_calcs))),
+    min_transcript_counts = min(c_across(where(is.numeric) & -any_of(count_calcs))),
+    std_dev_transcript_counts = sd(c_across(where(is.numeric) & -any_of(count_calcs)))
   )
 
 # Male stats
@@ -210,12 +261,12 @@ transcript_counts_per_gene_per_sample_males <- transcript_counts %>%
   rowwise() %>% 
   select("gene_name", ends_with('M')) %>% 
   mutate(
-    male_sum_transcript_counts = sum(c_across(where(is.numeric))),
-    male_median_transcript_counts = median(c_across(where(is.numeric))),
-    male_mean_transcript_counts = mean(c_across(where(is.numeric))),
-    male_max_transcript_counts = max(c_across(where(is.numeric))),
-    male_min_transcript_counts = min(c_across(where(is.numeric))),
-    male_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+    male_sum_transcript_counts = sum(c_across(where(is.numeric) & -any_of(count_calcs))),
+    male_median_transcript_counts = median(c_across(where(is.numeric) & -any_of(count_calcs))),
+    male_mean_transcript_counts = mean(c_across(where(is.numeric) & -any_of(count_calcs))),
+    male_max_transcript_counts = max(c_across(where(is.numeric) & -any_of(count_calcs))),
+    male_min_transcript_counts = min(c_across(where(is.numeric) & -any_of(count_calcs))),
+    male_std_dev_transcript_counts = sd(c_across(where(is.numeric) & -any_of(count_calcs)))
   )
 
 # Female stats
@@ -223,12 +274,12 @@ transcript_counts_per_gene_per_sample_females <- transcript_counts %>%
   rowwise() %>% 
   select("gene_name", ends_with('F')) %>% 
   mutate(
-    female_sum_transcript_counts = sum(c_across(where(is.numeric))),
-    female_median_transcript_counts = median(c_across(where(is.numeric))),
-    female_mean_transcript_counts = mean(c_across(where(is.numeric))),
-    female_max_transcript_counts = max(c_across(where(is.numeric))),
-    female_min_transcript_counts = min(c_across(where(is.numeric))),
-    female_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+    female_sum_transcript_counts = sum(c_across(where(is.numeric) & -any_of(count_calcs))),
+    female_median_transcript_counts = median(c_across(where(is.numeric) & -any_of(count_calcs))),
+    female_mean_transcript_counts = mean(c_across(where(is.numeric) & -any_of(count_calcs))),
+    female_max_transcript_counts = max(c_across(where(is.numeric) & -any_of(count_calcs))),
+    female_min_transcript_counts = min(c_across(where(is.numeric) & -any_of(count_calcs))),
+    female_std_dev_transcript_counts = sd(c_across(where(is.numeric) & -any_of(count_calcs)))
   )
 
 # Controls stats
@@ -236,12 +287,12 @@ transcript_counts_per_gene_per_sample_controls <- transcript_counts %>%
   rowwise() %>% 
   select("gene_name", ends_with(controls)) %>% 
   mutate(
-    controls_sum_transcript_counts = sum(c_across(where(is.numeric))),
-    controls_median_transcript_counts = median(c_across(where(is.numeric))),
-    controls_mean_transcript_counts = mean(c_across(where(is.numeric))),
-    controls_max_transcript_counts = max(c_across(where(is.numeric))),
-    controls_min_transcript_counts = min(c_across(where(is.numeric))),
-    controls_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+    controls_sum_transcript_counts = sum(c_across(where(is.numeric) & -any_of(count_calcs))),
+    controls_median_transcript_counts = median(c_across(where(is.numeric) & -any_of(count_calcs))),
+    controls_mean_transcript_counts = mean(c_across(where(is.numeric) & -any_of(count_calcs))),
+    controls_max_transcript_counts = max(c_across(where(is.numeric) & -any_of(count_calcs))),
+    controls_min_transcript_counts = min(c_across(where(is.numeric) & -any_of(count_calcs))),
+    controls_std_dev_transcript_counts = sd(c_across(where(is.numeric) & -any_of(count_calcs)))
   )
 
 # Exposed stats
@@ -249,12 +300,12 @@ transcript_counts_per_gene_per_sample_exposed <- transcript_counts %>%
   rowwise() %>% 
   select("gene_name", ends_with(exposed)) %>% 
   mutate(
-    exposed_sum_transcript_counts = sum(c_across(where(is.numeric))),
-    exposed_median_transcript_counts = median(c_across(where(is.numeric))),
-    exposed_mean_transcript_counts = mean(c_across(where(is.numeric))),
-    exposed_max_transcript_counts = max(c_across(where(is.numeric))),
-    exposed_min_transcript_counts = min(c_across(where(is.numeric))),
-    exposed_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+    exposed_sum_transcript_counts = sum(c_across(where(is.numeric) & -any_of(count_calcs))),
+    exposed_median_transcript_counts = median(c_across(where(is.numeric) & -any_of(count_calcs))),
+    exposed_mean_transcript_counts = mean(c_across(where(is.numeric) & -any_of(count_calcs))),
+    exposed_max_transcript_counts = max(c_across(where(is.numeric) & -any_of(count_calcs))),
+    exposed_min_transcript_counts = min(c_across(where(is.numeric) & -any_of(count_calcs))),
+    exposed_std_dev_transcript_counts = sd(c_across(where(is.numeric) & -any_of(count_calcs)))
   )
 
 # Controls females stats
@@ -262,12 +313,12 @@ transcript_counts_per_gene_per_sample_controls_females <- transcript_counts %>%
   rowwise() %>% 
   select("gene_name", ends_with(controls_females)) %>% 
   mutate(
-    control_females_sum_transcript_counts = sum(c_across(where(is.numeric))),
-    control_females_median_transcript_counts = median(c_across(where(is.numeric))),
-    control_females_mean_transcript_counts = mean(c_across(where(is.numeric))),
-    control_females_max_transcript_counts = max(c_across(where(is.numeric))),
-    control_females_min_transcript_counts = min(c_across(where(is.numeric))),
-    control_females_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+    control_females_sum_transcript_counts = sum(c_across(where(is.numeric) & -any_of(count_calcs))),
+    control_females_median_transcript_counts = median(c_across(where(is.numeric) & -any_of(count_calcs))),
+    control_females_mean_transcript_counts = mean(c_across(where(is.numeric) & -any_of(count_calcs))),
+    control_females_max_transcript_counts = max(c_across(where(is.numeric) & -any_of(count_calcs))),
+    control_females_min_transcript_counts = min(c_across(where(is.numeric) & -any_of(count_calcs))),
+    control_females_std_dev_transcript_counts = sd(c_across(where(is.numeric) & -any_of(count_calcs)))
   )
 
 # Exposed females stats
@@ -275,12 +326,12 @@ transcript_counts_per_gene_per_sample_exposed_females <- transcript_counts %>%
   rowwise() %>% 
   select("gene_name", ends_with(exposed_females)) %>% 
   mutate(
-    exposed_females_sum_transcript_counts = sum(c_across(where(is.numeric))),
-    exposed_females_median_transcript_counts = median(c_across(where(is.numeric))),
-    exposed_females_mean_transcript_counts = mean(c_across(where(is.numeric))),
-    exposed_females_max_transcript_counts = max(c_across(where(is.numeric))),
-    exposed_females_min_transcript_counts = min(c_across(where(is.numeric))),
-    exposed_females_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+    exposed_females_sum_transcript_counts = sum(c_across(where(is.numeric) & -any_of(count_calcs))),
+    exposed_females_median_transcript_counts = median(c_across(where(is.numeric) & -any_of(count_calcs))),
+    exposed_females_mean_transcript_counts = mean(c_across(where(is.numeric) & -any_of(count_calcs))),
+    exposed_females_max_transcript_counts = max(c_across(where(is.numeric) & -any_of(count_calcs))),
+    exposed_females_min_transcript_counts = min(c_across(where(is.numeric) & -any_of(count_calcs))),
+    exposed_females_std_dev_transcript_counts = sd(c_across(where(is.numeric) & -any_of(count_calcs)))
   )
 
 # Controls males stats
@@ -288,12 +339,12 @@ transcript_counts_per_gene_per_sample_controls_males <- transcript_counts %>%
   rowwise() %>% 
   select("gene_name", ends_with(controls_males)) %>% 
   mutate(
-    control_males_sum_transcript_counts = sum(c_across(where(is.numeric))),
-    control_males_median_transcript_counts = median(c_across(where(is.numeric))),
-    control_males_mean_transcript_counts = mean(c_across(where(is.numeric))),
-    control_males_max_transcript_counts = max(c_across(where(is.numeric))),
-    control_males_min_transcript_counts = min(c_across(where(is.numeric))),
-    control_males_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+    control_males_sum_transcript_counts = sum(c_across(where(is.numeric) & -any_of(count_calcs))),
+    control_males_median_transcript_counts = median(c_across(where(is.numeric) & -any_of(count_calcs))),
+    control_males_mean_transcript_counts = mean(c_across(where(is.numeric) & -any_of(count_calcs))),
+    control_males_max_transcript_counts = max(c_across(where(is.numeric) & -any_of(count_calcs))),
+    control_males_min_transcript_counts = min(c_across(where(is.numeric) & -any_of(count_calcs))),
+    control_males_std_dev_transcript_counts = sd(c_across(where(is.numeric) & -any_of(count_calcs)))
   )
 
 # Exposed males stats
@@ -301,12 +352,12 @@ transcript_counts_per_gene_per_sample_exposed_males <- transcript_counts %>%
   rowwise() %>% 
   select("gene_name", ends_with(exposed_males)) %>% 
   mutate(
-    exposed_males_sum_transcript_counts = sum(c_across(where(is.numeric))),
-    exposed_males_median_transcript_counts = median(c_across(where(is.numeric))),
-    exposed_males_mean_transcript_counts = mean(c_across(where(is.numeric))),
-    exposed_males_max_transcript_counts = max(c_across(where(is.numeric))),
-    exposed_males_min_transcript_counts = min(c_across(where(is.numeric))),
-    exposed_males_std_dev_transcript_counts = sd(c_across(where(is.numeric)))
+    exposed_males_sum_transcript_counts = sum(c_across(where(is.numeric) & -any_of(count_calcs))),
+    exposed_males_median_transcript_counts = median(c_across(where(is.numeric) & -any_of(count_calcs))),
+    exposed_males_mean_transcript_counts = mean(c_across(where(is.numeric) & -any_of(count_calcs))),
+    exposed_males_max_transcript_counts = max(c_across(where(is.numeric) & -any_of(count_calcs))),
+    exposed_males_min_transcript_counts = min(c_across(where(is.numeric) & -any_of(count_calcs))),
+    exposed_males_std_dev_transcript_counts = sd(c_across(where(is.numeric) & -any_of(count_calcs)))
   )
 
 # Add data frames to list

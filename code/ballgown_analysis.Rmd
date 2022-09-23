@@ -256,7 +256,12 @@ write.csv(whole_tx_table,
 ## Load all gene expression data
 ```{r load-gene-expression-data}
 whole_gx_table <-  gexpr(bg)
-head(whole_gx_table)
+whole_gx_table <- as.data.frame(whole_gx_table)
+# Write whole_tx_table to file
+write.csv(whole_gx_table,
+          file ="../data/whole_gx_table.csv",
+          quote = FALSE,
+          row.names = FALSE)
 ```
 
 ## Generate boxplots to compare FPKM across all samples

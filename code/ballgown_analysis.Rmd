@@ -256,7 +256,13 @@ write.csv(whole_tx_table,
 ## Load all gene expression data
 ```{r load-gene-expression-data}
 whole_gx_table <-  gexpr(bg)
+
+# Convet to data frame
 whole_gx_table <- as.data.frame(whole_gx_table)
+
+# Convert rownames to a column
+whole_gx_table <- rownames_to_column(whole_gx_table, "name")
+
 # Write whole_tx_table to file
 write.csv(whole_gx_table,
           file ="../data/whole_gx_table.csv",
